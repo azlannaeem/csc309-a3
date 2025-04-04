@@ -20,6 +20,16 @@ const port = (() => {
 
 const express = require("express");
 const app = express();
+require("dotenv").config();
+const cors = require('cors');
+
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+app.use(cors({
+    origin: FRONTEND_URL,
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 const { v4: uuidv4 } = require('uuid');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();

@@ -3,34 +3,32 @@ import './form.css';
 import React, { useState } from "react";
 
 function Login() {
-    const [username, setUsername] = useState("");
+    const [utorid, setUtorid] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const { login } = useAuth();
 
     const handle_submit = (e) => {
         e.preventDefault();
-        login(username, password)
+        login(utorid, password)
         .then(message => setError(message));
     };
 
     return <>
         <h2>Login</h2>
         <form onSubmit={handle_submit}>
-            <label htmlFor="username">User Name:</label>
+            <label htmlFor="utorid">utorid:</label>
             <input
                 type="text"
-                id="username"
-                name="username"
-                placeholder='User Name'
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                name="utorid"
+                placeholder='utorid'
+                value={utorid}
+                onChange={(e) => setUtorid(e.target.value)}
                 required
             />
             <label htmlFor="password">Password:</label>
             <input
                 type="password"
-                id="password"
                 name="password"
                 placeholder='Password'
                 value={password}

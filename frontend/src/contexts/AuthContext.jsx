@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAPI } from './APIContext';
 
 const AuthContext = createContext(null);
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
 /*
  * This provider should export a `user` context state that is 
@@ -16,18 +16,18 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
-    const profileUrl = `${BACKEND_URL}/users/me`;
-    const loginUrl = `${BACKEND_URL}/auth/tokens`;
-    const registerUrl = `${BACKEND_URL}/users`;
+    const { ajax } = useAPI();
+    const profilePath = "/users/me";
+    const loginPath = "/auth/tokens";
+    const registerPath = "/users";
 
     useEffect( () => {
         async function fetchUser() {
             const token = localStorage.getItem("token");
             if (token) {
+                const headers = { Authorization: `Bearer ${token}`};
                 
-                const res = await fetch(profileUrl, {
-                    headers: {Authorization: `Bearer ${token}`}
-                });
+                const res = await ajax(profilePath, { headers });
                 if (res.ok) {
                     const json = await res.json();
                     setUser(json);
@@ -57,22 +57,17 @@ export const AuthProvider = ({ children }) => {
      * @returns {string} - Upon failure, Returns an error message.
      */
     const login = async (utorid, password) => {
-        let res = await fetch(loginUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ utorid, password })
-        });
+        var headers = { 'Content-Type': 'application/json' };
+        const body = JSON.stringify({ utorid, password });
+        let res = await ajax(loginPath, { method: 'POST', headers, body });
         let json = await res.json();
         if (!res.ok) {
             return json.error;
         }
         const token = json.token;
+        headers = { Authorization: `Bearer ${token}` };
         localStorage.setItem("token", token);
-        res = await fetch(profileUrl, {
-            headers: {Authorization: `Bearer ${token}`}
-        });
+        res = await ajax(profilePath, { headers });
         json = await res.json();
         if (!res.ok) {
             return json.error;
@@ -90,7 +85,7 @@ export const AuthProvider = ({ children }) => {
      */
     const register = async (userData) => {
         const token = localStorage.getItem("token");
-        const res = await fetch(registerUrl, {
+        const res = await ajax(registerPath, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

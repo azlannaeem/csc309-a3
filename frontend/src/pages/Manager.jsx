@@ -10,9 +10,9 @@ function Profile() {
 
     return <>
         <h3>Hello, {user?.name}!</h3>
-        <p>You have been with us since {pretty_date}.</p>
         <div className="row">
             <Link to="/register">Register</Link>
+            <Link to="/users">Users</Link>
             <a href="#" onClick={logout}>Logout</a>
         </div>
     </>;

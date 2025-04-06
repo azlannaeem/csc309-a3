@@ -201,7 +201,7 @@ export default function Users() {
             {users.length > 0 && (
                 <>
                     <Table users={users} />
-                    <p className="pagination">
+                    <p className="btn-row">
                         {query.page > 1 && (
                             <button onClick={() => setSearchParams({...query, page: String(parseInt(query.page) - 1) })} disabled={fetching}>Previous</button>  
                         )}

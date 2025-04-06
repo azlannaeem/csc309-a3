@@ -26,7 +26,7 @@ const cors = require('cors');
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 app.use(cors({
     origin: FRONTEND_URL,
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
@@ -411,6 +411,7 @@ app.get("/users/:userId", jwtAuth, async (req, res) => {
             return res.json(response);
         }
         response.email = user.email;
+        response.suspicious = user.suspicious;
         response.birthday = user.birthday;
         response.role = user.role;
         response.createdAt = user.createdAt

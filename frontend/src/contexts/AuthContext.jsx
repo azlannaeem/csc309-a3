@@ -21,19 +21,20 @@ export const AuthProvider = ({ children }) => {
     const loginPath = "/auth/tokens";
     const registerPath = "/users";
 
-    useEffect( () => {
-        async function fetchUser() {
-            const token = localStorage.getItem("token");
-            if (token) {
-                const headers = { Authorization: `Bearer ${token}`};
-                
-                const res = await ajax(profilePath, { headers });
-                if (res.ok) {
-                    const json = await res.json();
-                    setUser(json);
-                }
+    async function fetchUser() {
+        const token = localStorage.getItem("token");
+        if (token) {
+            const headers = { Authorization: `Bearer ${token}`};
+            
+            const res = await ajax(profilePath, { headers });
+            if (res.ok) {
+                const json = await res.json();
+                setUser(json);
             }
         }
+    }
+
+    useEffect( () => {   
         fetchUser();
     }, []);
 
@@ -93,11 +94,11 @@ export const AuthProvider = ({ children }) => {
             },
             body: JSON.stringify(userData) 
         });
+        const json = await res.json();
         if (res.ok) {
-            navigate("/success");
+            navigate("/success", { state: { resetToken: json.resetToken, expiresAt: json.expiresAt, register: true } });
         }
         else {
-            const json = await res.json();
             return json.error;
         }
 

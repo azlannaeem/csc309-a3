@@ -871,13 +871,13 @@ app.get("/transactions", jwtAuth, async (req, res) => {
         const amount = parseInt(req.query.amount);
         
         const where = {
-            name: name || undefined,
+            utorid: name || undefined,
             createdBy: createdBy || undefined,
             suspicious,
             promotionIds: isNaN(promotionId)? undefined : { has: promotionId },
             type: type || undefined,
             relatedId: isNaN(relatedId)? undefined : relatedId,
-            amount: isNaN(amount)? undefined : { operator: amount }
+            amount: isNaN(amount)? undefined : { [operator]: amount }
         }
         const transactions = await prisma.transaction.findMany({ 
             where, skip, take: limit,
@@ -1096,7 +1096,7 @@ app.get("/users/me/transactions", jwtAuth, async (req, res) => {
             promotionIds: isNaN(promotionId)? undefined : { has: promotionId },
             type: type || undefined,
             relatedId: isNaN(relatedId)? undefined : relatedId,
-            amount: isNaN(amount)? undefined : { operator: amount }
+            amount: isNaN(amount)? undefined : { [operator]: amount }
         }
         const transactions = await prisma.transaction.findMany({ 
             where, skip, take: limit,

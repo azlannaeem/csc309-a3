@@ -58,8 +58,8 @@ export default function Users() {
         if (activated) {
             result.activated = activated;
         }
-        result.page = searchParams.get("page") || "1"
-        result.limit = searchParams.get("limit") || "10"
+        result.page = searchParams.get("page") || "1";
+        result.limit = searchParams.get("limit") || "10";
         return result;
     }, [searchParams]);
     
@@ -71,7 +71,7 @@ export default function Users() {
             const json = await res.json();
             if (res.ok) {
                 setUsers(json.results || []);
-                setTotalPages(Math.ceil(json.count / query.limit))
+                setTotalPages(Math.ceil(json.count / query.limit));
                 setError("");
             }
             else {

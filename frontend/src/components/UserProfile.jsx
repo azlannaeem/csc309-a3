@@ -19,7 +19,7 @@ export default function UserProfile ({ user }) {
         </div>
   
         <div className="user-info">
-          <p><strong>UTorID:</strong> {user.utorid}</p>
+          <p><strong>UtorID:</strong> {user.utorid}</p>
           <p><strong>Name:</strong> {user.name}</p>
           <p><strong>Email:</strong> {user.email}</p>
           <p><strong>Birthday:</strong> {user.birthday || "N/A"}</p>

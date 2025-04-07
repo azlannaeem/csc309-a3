@@ -406,12 +406,10 @@ app.patch('/users/me/password', jwtAuth, async (req, res) => {
 
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,20}$/;
     if (!regex.test(newPassword)) {
-      return res
-        .status(400)
-        .json({
-          error:
-            'New password must be 8-20 characters, at least one uppercase, one lowercase, one number, and one special character',
-        });
+      return res.status(400).json({
+        error:
+          'New password must be 8-20 characters, at least one uppercase, one lowercase, one number, and one special character',
+      });
     }
     await prisma.user.update({
       where: { id: user.id },
@@ -554,11 +552,9 @@ app.patch('/users/:userId', jwtAuth, async (req, res) => {
           .json({ error: 'role should either cashier or regular.' });
       }
       if (!['regular', 'cashier', 'manager', 'superuser'].includes(role)) {
-        return res
-          .status(400)
-          .json({
-            error: 'role should any of cashier, regular, manager, or superuser',
-          });
+        return res.status(400).json({
+          error: 'role should any of cashier, regular, manager, or superuser',
+        });
       }
       data.role = role;
     }
@@ -703,12 +699,10 @@ app.post('/auth/resets/:resetToken', async (req, res) => {
     }
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,20}$/;
     if (!regex.test(password)) {
-      return res
-        .status(400)
-        .json({
-          error:
-            'New password must be 8-20 characters, at least one uppercase, one lowercase, one number, and one special character',
-        });
+      return res.status(400).json({
+        error:
+          'New password must be 8-20 characters, at least one uppercase, one lowercase, one number, and one special character',
+      });
     }
     const resetToken = req.params.resetToken;
     if (resetToken !== user.resetToken) {
@@ -756,11 +750,9 @@ app.post('/transactions', jwtAuth, async (req, res) => {
     if (type === 'purchase') {
       const { utorid, spent, promotionIds, remark, ...rest } = req.body;
       if (Object.keys(rest).length > 1) {
-        return res
-          .status(400)
-          .json({
-            error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
-          });
+        return res.status(400).json({
+          error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
+        });
       }
       if (utorid === undefined || utorid === null) {
         return res.status(400).json({ error: 'utorid must be provided' });
@@ -997,13 +989,13 @@ app.get('/transactions', jwtAuth, async (req, res) => {
     const amount = parseInt(req.query.amount);
 
     const where = {
-      name: name || undefined,
+      utorid: name || undefined,
       createdBy: createdBy || undefined,
       suspicious,
       promotionIds: isNaN(promotionId) ? undefined : { has: promotionId },
       type: type || undefined,
       relatedId: isNaN(relatedId) ? undefined : relatedId,
-      amount: isNaN(amount) ? undefined : { operator: amount },
+      amount: isNaN(amount) ? undefined : { [operator]: amount },
     };
     const transactions = await prisma.transaction.findMany({
       where,
@@ -1094,11 +1086,9 @@ app.patch(
       }
       const { suspicious, ...rest } = req.body;
       if (Object.keys(rest).length > 0) {
-        return res
-          .status(400)
-          .json({
-            error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
-          });
+        return res.status(400).json({
+          error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
+        });
       }
       if (typeof suspicious !== 'boolean') {
         return res.status(400).json({ error: 'suspicious must be boolean' });
@@ -1249,7 +1239,7 @@ app.get('/users/me/transactions', jwtAuth, async (req, res) => {
       promotionIds: isNaN(promotionId) ? undefined : { has: promotionId },
       type: type || undefined,
       relatedId: isNaN(relatedId) ? undefined : relatedId,
-      amount: isNaN(amount) ? undefined : { operator: amount },
+      amount: isNaN(amount) ? undefined : { [operator]: amount },
     };
     const transactions = await prisma.transaction.findMany({
       where,
@@ -1385,11 +1375,9 @@ app.patch(
       }
       const { processed, ...rest } = req.body;
       if (Object.keys(rest).length > 0) {
-        return res
-          .status(400)
-          .json({
-            error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
-          });
+        return res.status(400).json({
+          error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
+        });
       }
       if (processed !== true) {
         return res.status(400).json({ error: 'processed must be true' });
@@ -1949,12 +1937,10 @@ app.post('/events/:eventId/organizers', jwtAuth, async (req, res) => {
       return res.status(404).json({ error: 'Event not found' });
     }
     if (event.guests.some((guest) => guest.id === user.id)) {
-      return res
-        .status(400)
-        .json({
-          error:
-            'user is registered as a guest to the event (remove user as guest first, then retry)',
-        });
+      return res.status(400).json({
+        error:
+          'user is registered as a guest to the event (remove user as guest first, then retry)',
+      });
     }
     const now = new Date();
     const end = new Date(event.endTime);
@@ -1970,14 +1956,12 @@ app.post('/events/:eventId/organizers', jwtAuth, async (req, res) => {
     const organizers = updated.organizers.map((o) => {
       return { id: o.id, utorid: o.utorid, name: o.name };
     });
-    return res
-      .status(201)
-      .json({
-        id: updated.id,
-        name: updated.name,
-        location: updated.location,
-        organizers,
-      });
+    return res.status(201).json({
+      id: updated.id,
+      name: updated.name,
+      location: updated.location,
+      organizers,
+    });
   } catch (error) {
     console.error('eventid organizer error:', error);
     res.status(500).json({ error });
@@ -2081,15 +2065,13 @@ app.post('/events/:eventId/guests/me', jwtAuth, async (req, res) => {
       name: req.user.name,
     };
     const numGuests = updated.guests.length;
-    return res
-      .status(201)
-      .json({
-        id: updated.id,
-        name: updated.name,
-        location: updated.location,
-        guestAdded,
-        numGuests,
-      });
+    return res.status(201).json({
+      id: updated.id,
+      name: updated.name,
+      location: updated.location,
+      guestAdded,
+      numGuests,
+    });
   } catch (error) {
     console.error('eventid organizer error:', error);
     res.status(500).json({ error });
@@ -2206,15 +2188,13 @@ app.post('/events/:eventId/guests', jwtAuth, async (req, res) => {
     });
     const guestAdded = { id: user.id, utorid: user.utorid, name: user.name };
     const numGuests = updated.guests.length;
-    return res
-      .status(201)
-      .json({
-        id: updated.id,
-        name: updated.name,
-        location: updated.location,
-        guestAdded,
-        numGuests,
-      });
+    return res.status(201).json({
+      id: updated.id,
+      name: updated.name,
+      location: updated.location,
+      guestAdded,
+      numGuests,
+    });
   } catch (error) {
     console.error('eventid organizer error:', error);
     res.status(500).json({ error });

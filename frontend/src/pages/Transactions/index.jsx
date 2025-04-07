@@ -22,9 +22,9 @@ function to_url(query, path) {
     return path;
 }
 
-export default function Users() {
+export default function Transactions() {
     const navigate = useNavigate();
-    const [users, setUsers] = useState([]);
+    const [transactions, setTransactions] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams(); 
     const [totalPages, setTotalPages] = useState(0);
     const [error, setError] = useState("");
@@ -46,17 +46,33 @@ export default function Users() {
         if (name) {
             result.name = name;
         }
-        const role = searchParams.get("role");
-        if (role) {
-            result.role = role;
+        const createdBy = searchParams.get("createdBy");
+        if (createdBy) {
+            result.createdBy = createdBy;
         }
-        const verified = searchParams.get("verified");
-        if (verified) {
-            result.verified = verified;
+        const suspicious = searchParams.get("suspicious");
+        if (suspicious) {
+            result.suspicious = suspicious;
         }
-        const activated = searchParams.get("activated");
-        if (activated) {
-            result.activated = activated;
+        const promotionId = searchParams.get("promotionId");
+        if (promotionId) {
+            result.promotionId = promotionId;
+        }
+        const type = searchParams.get("type");
+        if (type) {
+            result.type = type;
+        }
+        const relatedId = searchParams.get("relatedId");
+        if (relatedId) {
+            result.relatedId = relatedId;
+        }
+        const amount = searchParams.get("amount");
+        if (amount) {
+            result.amount = amount;
+        }
+        const operator = searchParams.get("operator");
+        if (operator) {
+            result.operator = operator;
         }
         result.page = searchParams.get("page") || "1";
         result.limit = searchParams.get("limit") || "10";
@@ -64,13 +80,13 @@ export default function Users() {
     }, [searchParams]);
     
     const fetchUsers = async () => {
-        const url = to_url(query, "/users");
+        const url = to_url(query, "/transactions");
         const headers = {Authorization: `Bearer ${token}`};
         const res = await ajax(url, { headers });
         if (res) {
             const json = await res.json();
             if (res.ok) {
-                setUsers(json.results || []);
+                setTransactions(json.results || []);
                 setTotalPages(Math.ceil(json.count / query.limit));
                 setError("");
             }
@@ -94,7 +110,7 @@ export default function Users() {
 
     return (
         <>
-            <h1>Users</h1>
+            <h1>Transactions</h1>
             <div className="filters">
                 <div className="input-container">
                     <label htmlFor="name">Name:</label>
@@ -106,81 +122,94 @@ export default function Users() {
                     />
                 </div>
                 <div className="input-container">
-                    <label htmlFor="role">Role:</label>
+                    <label htmlFor="createdBy">Created By:</label>
                     <input
                         type="text"
-                        name="role"
-                        placeholder='Role'
-                        value={query.role || ""}
+                        name="createdBy"
+                        placeholder='Created By'
+                        value={query.createdBy || ""}
                         onChange={(e) => handleChange(e)}
                     />
                 </div>
                 <div className="checkbox-container">
-                    <label htmlFor="verified">Verified</label>
+                    <label htmlFor="suspicious">Suspicious</label>
                     <input 
                         type='checkbox'
-                        name="verified"
+                        name="suspicious"
                         onChange={(e) => {
                             const updated = { ...query };
                             if (e.target.checked) {
-                                updated.verified = "true";
+                                updated.suspicious = "true";
                             } else {
-                                delete updated.verified;
+                                delete updated.suspicious;
                             }
                             updated.page = 1;
                             setSearchParams(updated);
                         }}
-                        checked={query.verified === "true"} 
+                        checked={query.suspicious === "true"} 
                     />
-                    <label htmlFor="unverified">Unverified</label>
+                    <label htmlFor="unsuspicious">Unsuspicious</label>
                     <input 
                         type='checkbox'
-                        name="unverified" 
+                        name="unsuspicious" 
                         onChange={(e) => {
                             const updated = { ...query };
                             if (e.target.checked) {
-                                updated.verified = "false";
+                                updated.suspicious = "false";
                             } else {
-                                delete updated.verified;
+                                delete updated.suspicious;
                             }
                             updated.page = 1;
                             setSearchParams(updated);
                         }}
-                        checked={query.verified === "false"} 
-                    />
-                    <label htmlFor="activated">Activated</label>
-                    <input 
-                        type='checkbox'
-                        name="activated" 
-                        onChange={(e) => {
-                            const updated = { ...query };
-                            if (e.target.checked) {
-                                updated.activated = "true";
-                            } else {
-                                delete updated.activated;
-                            }
-                            updated.page = 1;
-                            setSearchParams(updated);
-                        }}
-                        checked={query.activated === "true"} 
-                    />
-                    <label htmlFor="unactivated">Unactivated</label>
-                    <input 
-                        type='checkbox'
-                        name="unactivated" 
-                        onChange={(e) => {
-                            const updated = { ...query };
-                            if (e.target.checked) {
-                                updated.activated = "false";
-                            } else {
-                                delete updated.activated;
-                            }
-                            updated.page = 1;
-                            setSearchParams(updated);
-                        }}
-                        checked={query.activated === "false"} 
+                        checked={query.suspicious === "false"} 
                     />
                 </div>
+                <div className="input-container">
+                    <label htmlFor="promotionId">Promotion ID:</label>
+                    <input 
+                        type='number'
+                        name="promotionId"
+                        value={query.promotionId || ''}
+                        min={0} 
+                        onChange={(e) => handleChange(e)}
+                    />
+                </div>
+                <div className="input-container">
+                    <label htmlFor="type">Type:</label>
+                    <input
+                        type="text"
+                        name="type"
+                        placeholder='Type'
+                        value={query.type || ""}
+                        onChange={(e) => handleChange(e)}
+                    />
+                </div>
+                <div className="input-container">
+                    <label htmlFor="relatedId">Related ID:</label>
+                    <input 
+                        type='number'
+                        name="relatedId"
+                        value={query.relatedId || ''}
+                        min={0} 
+                        onChange={(e) => handleChange(e)}
+                    />
+                </div>
+                <div className="input-container">
+                    <label htmlFor="amount">Amount:</label>
+                    <input 
+                        type='number'
+                        name="amount"
+                        value={query.amount || ''}
+                        onChange={(e) => handleChange(e)}
+                    />
+                </div>
+                <label htmlFor="operator">Operator</label>
+                <select id="operator" name="operator" value={query.operator || ""} onChange={(e) => handleChange(e)}>
+                    <option value="">-- Select Operator --</option>
+                    <option value="gte">{"≥"}</option>
+                    <option value="lte">{"≤"}</option>
+                </select>
                 <div className="input-container">
                     <label htmlFor="limit">Limit:</label>
                     <input 
@@ -199,9 +228,9 @@ export default function Users() {
                 </div>
                 <p className="error">{error}</p>
             </div>
-            {users.length > 0 && (
+            {transactions.length > 0 && (
                 <>
-                    <Table users={users} />
+                    <Table transactions={transactions} />
                     <p className="btn-row">
                         {query.page > 1 && (
                             <button onClick={() => setSearchParams({...query, page: String(parseInt(query.page) - 1) })} disabled={fetching}>Previous</button>  

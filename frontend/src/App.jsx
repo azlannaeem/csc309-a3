@@ -15,10 +15,17 @@ import NotFound from "./pages/NotFound";
 import User from "./pages/User";
 import Reset from "./pages/Reset";
 import CurrentUser from "./pages/CurrentUser";
+import Transactions from "./pages/Transactions";
+import Transaction from "./pages/Transaction";
 
 const UserWrapper = () => {
     const { userId } = useParams();
     return <User userId={parseInt(userId, 10)} />;
+};
+
+const TransactionWrapper = () => {
+    const { transactionId } = useParams();
+    return <Transaction transactionId={parseInt(transactionId, 10)} />;
 };
 
 const MyRoutes = () => {
@@ -36,6 +43,8 @@ const MyRoutes = () => {
             <Route path="reset" element={<Reset />} />
             <Route path="users/me" element={<CurrentUser />} />
             <Route path="users/:userId" element={<UserWrapper />} />
+            <Route path="transactions" element={<Transactions />} />
+            <Route path="transactions/:transactionId" element={<TransactionWrapper />} />
             <Route path="*" element={<NotFound />} />
         </Route>
     </Routes>;

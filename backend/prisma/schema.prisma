@@ -51,7 +51,7 @@ model Transaction {
   relatedId     Int?
   redeemed      Int?
   promotionIds  Json        @default("[]")
-  suspicious    Boolean?
+  suspicious    Boolean     @default(false)
   createdBy     String
   processedBy   String?
 }

@@ -35,7 +35,7 @@ export default function User({userId}) {
     }
     useEffect(() => {
         fetchUser();
-    }, [edit]);
+    }, [edit, userId]);
 
     useEffect(() => {
         if (user && targetUser) {

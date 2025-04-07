@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import UpdateCurrentUser from "../../components/UpdateCurrentUser";
 import ChangePassword from "../../components/ChangePassword";
 
-export default function CurrentUser({userId}) {
+export default function CurrentUser() {
     const { ajax } = useAPI();
     const [edit, setEdit] = useState(false);
     const [changePassword, setChangePassword] = useState(false);

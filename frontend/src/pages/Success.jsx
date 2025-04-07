@@ -1,13 +1,21 @@
+import { useEffect } from "react";
 import "./main.css";
 import { useLocation, useNavigate } from "react-router-dom";
 
 
 function Success() {
-    const location = useLocation();
     const navigate = useNavigate();
+    const location = useLocation();
     const { resetToken, expiresAt, register } = location.state || {};
     const flag = resetToken && expiresAt;
-    const formattedExpiresAt = new Date(expiresAt).toLocaleString()
+    const formattedExpiresAt = new Date(expiresAt).toLocaleString();
+
+    useEffect(() => {
+        if (!flag) {
+            navigate("/");
+        }
+    }, [flag]);  
+
     return <>
         {register ? 
         <h3>Registration Successful</h3> :

@@ -1,17 +1,24 @@
+import { useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import "./main.css";
+import { Link, useNavigate } from "react-router-dom";
 
 function Profile() {
     const { user, logout } = useAuth();
-    const date = new Date(user?.createdAt);
-    const options = { hour: 'numeric', minute: 'numeric', hour12: true };
-    const pretty_date = date.toLocaleTimeString('en-US', options);
+    const token = localStorage.getItem("token");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!token) {
+            navigate("/login");
+        }
+    }, [token]); 
 
     return <>
         <h3>Hello, {user?.name}!</h3>
-        <p>You have been with us since {pretty_date}.</p>
         <div className="row">
-            <a href="#" onClick={logout}>Logout</a>
+            <Link to="/users/me">View Profile</Link>
+            <Link onClick={logout}>Logout</Link>  
         </div>
     </>;
 }

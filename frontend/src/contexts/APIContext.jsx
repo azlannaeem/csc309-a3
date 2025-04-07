@@ -1,7 +1,7 @@
 import { createContext, useState, useContext } from "react";
 
 export const APIContext = createContext(null);
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
 
 export const useAPIContext = () => {

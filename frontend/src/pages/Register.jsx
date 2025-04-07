@@ -1,15 +1,24 @@
 import './form.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-    const { register } = useAuth();
+    const { user, register } = useAuth();
     const [error, setError] = useState("");
     const [data, setData] = useState({
         utorid: '',
         name: '',
         email: ''
     });
+    const navigate = useNavigate();
+    const token = localStorage.getItem("token");
+    const clearance = ["superuser", "manager", "cashier"];
+    useEffect(() => {
+        if (!token || (user && !clearance.includes(user.role))) {
+            navigate("/login");
+        }
+    }, [token, user]);  
 
     const handle_change = (e) => {
         const { name, value } = e.target;

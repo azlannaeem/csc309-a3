@@ -51,6 +51,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 const rateLimitMap = new Map();
+app.use("/uploads", express.static("uploads"));
 
 app.post("/users", jwtAuth, async (req, res) => {
     try{
@@ -208,9 +209,6 @@ app.patch("/users/me", jwtAuth, upload.single("avatar"), async (req, res) => {
         const id = req.user.id; 
 
         const avatarPath = req.file ? `/uploads/avatars/${req.user.utorid}.png` : undefined;
-        if (Object.keys(req.body).length === 0) {
-            return res.status(400).json({ error: "Request body cannot be empty" });
-        }
         const { name, email, birthday, avatar, ...rest } = req.body;
         if (name === null && email === null && birthday === null && avatar === null) {
             return res.status(400).json({ error: "Request body cannot be empty" });
@@ -230,7 +228,7 @@ app.patch("/users/me", jwtAuth, upload.single("avatar"), async (req, res) => {
                 return res.status(400).json({ error: "email must be a valid University of Toronto email" });
             }
         
-            user = await prisma.user.findUnique({
+            const user = await prisma.user.findUnique({
                 where: { email }
             });
         
@@ -283,6 +281,7 @@ app.patch("/users/me", jwtAuth, upload.single("avatar"), async (req, res) => {
         res.json(updatedUser);
     }
     catch (error) {
+        console.error("user/me patch: ", error);
         res.status(500).json({ error });
     }
 });

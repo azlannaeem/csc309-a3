@@ -24,12 +24,22 @@ export const AuthProvider = ({ children }) => {
     async function fetchUser() {
         const token = localStorage.getItem("token");
         if (token) {
-            const headers = { Authorization: `Bearer ${token}`};
-            
-            const res = await ajax(profilePath, { headers });
-            if (res.ok) {
-                const json = await res.json();
-                setUser(json);
+            const expiresAt = new Date(localStorage.getItem("expiresAt"));
+            const now = new Date();
+            if (now >= expiresAt) {
+                localStorage.removeItem("token");
+                localStorage.removeItem("expiresAt");
+                setUser(null);
+                navigate("/login");
+            }
+            else {
+                const headers = { Authorization: `Bearer ${token}`};
+                
+                const res = await ajax(profilePath, { headers });
+                if (res.ok) {
+                    const json = await res.json();
+                    setUser(json);
+                }
             }
         }
     }
@@ -45,6 +55,7 @@ export const AuthProvider = ({ children }) => {
      */
     const logout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("expiresAt");
         setUser(null);
         navigate("/");
     };
@@ -68,6 +79,7 @@ export const AuthProvider = ({ children }) => {
         const token = json.token;
         headers = { Authorization: `Bearer ${token}` };
         localStorage.setItem("token", token);
+        localStorage.setItem("expiresAt", json.expiresAt);
         res = await ajax(profilePath, { headers });
         json = await res.json();
         if (!res.ok) {

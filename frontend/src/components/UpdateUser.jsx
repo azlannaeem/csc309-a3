@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useAPI } from "../../../contexts/APIContext";
+import { useAPI } from "../contexts/APIContext";
 
-export default function Update({user, setEdit}) {
+export default function UpdateUser({user, setEdit, isSuper}) {
     const [email, setEmail] = useState(user.email);
     const [role, setRole] = useState(user.role);
     const [verified, setVerified] = useState(null);
@@ -54,7 +54,7 @@ export default function Update({user, setEdit}) {
             <label htmlFor="email">Email:</label>
             <input
                 type="text"
-                name="utorid"
+                name="email"
                 placeholder='Email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -64,6 +64,13 @@ export default function Update({user, setEdit}) {
             <select id="role" name="role" defaultValue={role} onChange={(e) => setRole(e.target.value)} required>
                 <option value="regular">Regular</option>
                 <option value="cashier">Cashier</option>
+                <>
+                {isSuper && <>
+                <option value="manager">Manager</option>
+                <option value="superuser">Super User</option>
+                </>
+                }
+                </>
             </select>
             {!user.verified && <>
                 <label htmlFor="verified">Mark as Verified</label>
@@ -121,5 +128,5 @@ export default function Update({user, setEdit}) {
             </p>   
             <p className="error">{error}</p>
         </form>
-    </>;
+        </>
 }

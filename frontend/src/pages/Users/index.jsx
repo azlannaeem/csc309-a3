@@ -31,12 +31,13 @@ export default function Users() {
     const { fetching, ajax } = useAPI();
     const { user } = useAuth();
     const token = localStorage.getItem("token");
+    const clearance = ["superuser", "manager"];
 
     useEffect(() => {
-        if (!token || (user && user.role !== "manager")) {
+        if (!token || (user && !clearance.includes(user.role))) {
             navigate("/login");
         }
-    }, []);    
+    }, [token, user]);    
     
     
     const query = useMemo(() => {

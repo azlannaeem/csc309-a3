@@ -14,6 +14,7 @@ import { APIProvider } from "./contexts/APIContext";
 import NotFound from "./pages/NotFound";
 import User from "./pages/User";
 import Reset from "./pages/Reset";
+import CurrentUser from "./pages/CurrentUser";
 
 const UserWrapper = () => {
     const { userId } = useParams();
@@ -33,6 +34,7 @@ const MyRoutes = () => {
             <Route path="regular" element={<Regular />} />
             <Route path="users" element={<Users />} />
             <Route path="reset" element={<Reset />} />
+            <Route path="users/me" element={<CurrentUser />} />
             <Route path="users/:userId" element={<UserWrapper />} />
             <Route path="*" element={<NotFound />} />
         </Route>

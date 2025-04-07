@@ -1,3 +1,4 @@
+import { BACKEND_URL } from "../contexts/APIContext";
 export default function UserProfile ({ user }) {
     const formatDate = (date) => {
       if (!date) return "N/A";
@@ -11,7 +12,7 @@ export default function UserProfile ({ user }) {
   
         <div className="user-avatar">
           {user.avatarUrl ? (
-            <img src={user.avatarUrl} alt="User Avatar" className="avatar" />
+            <img src={`${BACKEND_URL}${user.avatarUrl}`} alt="User Avatar" className="avatar" />
           ) : (
             <div className="avatar-placeholder">No Avatar</div>
           )}
@@ -21,11 +22,11 @@ export default function UserProfile ({ user }) {
           <p><strong>UTorID:</strong> {user.utorid}</p>
           <p><strong>Name:</strong> {user.name}</p>
           <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Birthday:</strong> {formatDate(user.birthday)}</p>
+          <p><strong>Birthday:</strong> {user.birthday || "N/A"}</p>
           <p><strong>Role:</strong> {user.role}</p>
           <p><strong>Points:</strong> {user.points}</p>
           <p><strong>Verified:</strong> {user.verified ? "Yes" : "No"}</p>
-          <p><strong>Suspicious:</strong> {user.suspicious ? "Yes" : "No"}</p>
+          {user.suspicious !== undefined && <p><strong>Suspicious:</strong> {user.suspicious ? "Yes" : "No"}</p>}
           <p><strong>Account Created:</strong> {formatDate(user.createdAt)}</p>
           <p><strong>Last Login:</strong> {formatDate(user.lastLogin)}</p>
         </div>

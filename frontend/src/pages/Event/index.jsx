@@ -11,6 +11,8 @@ export default function Event({eventId}) {
     const [event, setEvent] = useState(null);
     const [error, setError] = useState("");
     const [edit, setEdit] = useState(false);
+    const [utorid, setUtorid] = useState("");
+    const [type, setType] = useState("");
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const clearance = ["superuser", "manager"];
@@ -63,6 +65,28 @@ export default function Event({eventId}) {
         }
     }
 
+    async function addUser(e) {
+        e.preventDefault();
+        const path = `/events/${eventId}/${type}`;
+        const headers = { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`};
+        const method = 'POST';
+        const body = JSON.stringify({utorid});
+        
+        const res = await ajax(path, { method, headers, body });
+        if (res) {
+            if (res.ok) {
+                setError("");
+                fetchEvent();
+            }
+            else {
+                const json = await res.json();
+                setError(json.error);
+            }
+        }
+      }
+
 
     return <>
         {edit ? 
@@ -74,7 +98,27 @@ export default function Event({eventId}) {
             <>
             {event && 
                 <>
-                <EventDetails event={event} created={created}/>
+                <EventDetails event={event} created={created} />
+                <form className="add" onSubmit={(e) => addUser(e)}>
+                <div className="add-container">
+                <label htmlFor="utorid">UtorID:</label>
+                <input
+                    type="text"
+                    id="utorid"
+                    name="utorid"
+                    placeholder='utorid'
+                    value={utorid}
+                    onChange={(e) => setUtorid(e.target.value)}
+                    required
+                    />
+                <select id="type" name="type" value={type} onChange={(e) => setType(e.target.value)} required>
+                    <option value="">-- Select Type --</option>
+                    <option value="organizers">Organizer</option>
+                    <option value="guests">Guest</option>
+                </select>
+                <button type="submit">Add</button>
+                </div>
+                </form>
                 <div>
                 {error && <p className="error">{error}</p>}
                 <p className="buttons">

@@ -6,7 +6,7 @@
     gap: 15px;
 }
 
-.input-container label {
+.filters .input-container label {
     text-align: left;
     align-self: center;
     width: 15%;

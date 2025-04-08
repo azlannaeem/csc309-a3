@@ -14,6 +14,7 @@ export default function EventDetails ({ event, created }) {
     };
     return new Date(date).toLocaleDateString(undefined, options);
   };
+  
     return (
         <>
         {created? <h2>Event Created</h2> : <h2>Event Details</h2>}
@@ -45,6 +46,7 @@ export default function EventDetails ({ event, created }) {
             <p>None</p>
           )}
         </div>
+        
         <div className="promotions">
           <h3>Guests</h3>
           {event.guests.length > 0 ? (

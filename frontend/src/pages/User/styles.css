@@ -39,6 +39,14 @@
     margin-bottom: 10px;
 }
 
+.promotions {
+    text-align: center;
+}
+
+.promotions p {
+    margin-bottom: 8px;
+}
+
 .promotions ul {
     list-style-type: none;
     padding: 0;

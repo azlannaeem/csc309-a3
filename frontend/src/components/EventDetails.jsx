@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export default function EventDetails ({ event, created }) {
+export default function EventDetails ({ event, created, removeUser }) {
   const navigate = useNavigate();
   const formatDate = (date) => {
     if (!date) return "N/A";
@@ -36,9 +36,10 @@ export default function EventDetails ({ event, created }) {
           {event.organizers.length > 0 ? (
             <ul>
               {event.organizers.map((organizer) => (
-                <li className="clickable" key={organizer.id} onClick={() => navigate(`/users/${organizer.id}`)}>
-                  <p><strong>UtorID:</strong> {organizer.utorid}</p>
+                <li key={organizer.id} >
+                  <p className="clickable" onClick={() => navigate(`/users/${organizer.id}`)}><strong>UtorID:</strong> {organizer.utorid}</p>
                   <p><strong>Name:</strong> {organizer.name}</p>
+                  <button onClick={(e) => removeUser(e, organizer.id, "organizers")}>Remove</button>
                 </li>
               ))}
             </ul>
@@ -52,9 +53,10 @@ export default function EventDetails ({ event, created }) {
           {event.guests.length > 0 ? (
             <ul>
               {event.guests.map((guest) => (
-                <li className="clickable" key={guest.id} onClick={() => navigate(`/users/${guest.id}`)}>
-                  <p><strong>UtorID:</strong> {guest.utorid}</p>
+                <li key={guest.id} >
+                  <p className="clickable" onClick={() => navigate(`/users/${guest.id}`)}><strong>UtorID:</strong> {guest.utorid}</p>
                   <p><strong>Name:</strong> {guest.name}</p>
+                  <button onClick={(e) => removeUser(e, guest.id, "guests")}>Remove</button>
                 </li>
               ))}
             </ul>

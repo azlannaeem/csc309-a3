@@ -1,5 +1,5 @@
 
-export default function PromotionDetails ({ promotion }) {
+export default function PromotionDetails ({ promotion, created }) {
   const formatDate = (date) => {
     if (!date) return "N/A";
     const options = {
@@ -14,7 +14,7 @@ export default function PromotionDetails ({ promotion }) {
   };
     return (
         <>
-        <h2>Promotion Details</h2>
+        {created? <h2>Promotion Created</h2> : <h2>Promotion Details</h2>}
         <div className="user-info">
           <p><strong>Name:</strong> {promotion.name}</p>
           <p><strong>Description:</strong> {promotion.description}</p>

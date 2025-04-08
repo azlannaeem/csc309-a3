@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAPI } from "../../contexts/APIContext";
 import './styles.css'
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import PromotionDetails from "../../components/PromotionDetails";
 import UpdatePromotion from "../../components/UpdatePromotion";
@@ -15,6 +15,8 @@ export default function Promotion({promotionId}) {
     const token = localStorage.getItem("token");
     const clearance = ["superuser", "manager"];
     const { user } = useAuth();
+    const location = useLocation();
+    const {created} = location.state || {};
 
     useEffect(() => {
         if (!token || (user && !clearance.includes(user.role))) {
@@ -72,7 +74,7 @@ export default function Promotion({promotionId}) {
             <>
             {promotion && 
                 <>
-                <PromotionDetails promotion={promotion} />
+                <PromotionDetails promotion={promotion} created={created}/>
                 <p className="buttons">
                 <button onClick={() => setEdit(true)}>Edit</button>
                 <button onClick={() => deletePromotion()}>Delete</button>

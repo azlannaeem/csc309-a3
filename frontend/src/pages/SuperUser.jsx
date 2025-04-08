@@ -1,35 +1,39 @@
-import { useAuth } from "../contexts/AuthContext";
-import "./main.css";
-import { Link } from "react-router";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useAuth } from '../contexts/AuthContext';
+import './main.css';
+import { Link } from 'react-router';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
     const { user, logout } = useAuth();
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!token || (user && user.role !== "superuser")) {
-            navigate("/login");
+        if (!token || (user && user.role !== 'superuser')) {
+            navigate('/login');
         }
-    }, [token, user]);  
+    }, [token, user]);
 
-    return <>
-        <h3>Hello, {user?.name}!</h3>
-        <div className="row">
-            <Link to="/users/me">View Profile</Link>
-            <Link to="/register">Register</Link>
-            <Link to="/users">Users</Link>
-            <Link onClick={logout}>Logout</Link>        
-        </div>
-        <div className="row">
-            <Link to="/transactions">Transactions</Link>
-            <Link to="/promotions">Promotions</Link>
-            <Link to="/promotion">Create Promotion</Link>
-        </div>
-    </>;
+    return (
+        <>
+            <h3>Hello, {user?.name}!</h3>
+            <div className="row">
+                <Link to="/users/me">View Profile</Link>
+                <Link to="/register">Register</Link>
+                <Link to="/users">Users</Link>
+                <Link onClick={logout}>Logout</Link>
+            </div>
+            <div className="row">
+                <Link to="/transactions">Transactions</Link>
+                <Link to="/promotions">Promotions</Link>
+                <Link to="/promotion">Create Promotion</Link>
+            </div>
+            <div className="row">
+                {user?.isOrganizer && <Link to="/events">My Events</Link>}
+            </div>
+        </>
+    );
 }
 
 export default Profile;

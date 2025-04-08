@@ -22,6 +22,10 @@ import ProcessRedemption from './pages/Cashier/ProcessRedemption';
 import Promotions from './pages/Promotions';
 import Promotion from './pages/Promotion';
 import CreatePromotion from './pages/CreatePromotion';
+import MyEvents from './pages/EventOrganizer/MyEvents';
+import EditEvent from './pages/EventOrganizer/EditEvent';
+import AddGuests from './pages/EventOrganizer/AddGuests';
+import AwardPoints from './pages/EventOrganizer/AwardPoints';
 
 const UserWrapper = () => {
     const { userId } = useParams();
@@ -36,6 +40,11 @@ const TransactionWrapper = () => {
 const PromotionWrapper = () => {
     const { promotionId } = useParams();
     return <Promotion promotionId={parseInt(promotionId, 10)} />;
+};
+
+const EventWrapper = ({ Component }) => {
+    const { eventId } = useParams();
+    return <Component eventId={parseInt(eventId, 10)} />;
 };
 
 const MyRoutes = () => {
@@ -73,6 +82,17 @@ const MyRoutes = () => {
                     path="/process-redemption"
                     element={<ProcessRedemption />}
                 />
+                <Route path="events" element={<MyEvents />} />
+                <Route path="events/:eventId/edit" element={<EditEvent />} />
+                <Route
+                    path="events/:eventId/add-guests"
+                    element={<AddGuests />}
+                />
+                <Route
+                    path="events/:eventId/award-points"
+                    element={<AwardPoints />}
+                />
+
                 <Route path="*" element={<NotFound />} />
             </Route>
         </Routes>

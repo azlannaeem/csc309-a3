@@ -152,7 +152,7 @@ export default function UpdateEvent({event, setEdit}) {
                 type='number'
                 name="points"
                 value={points}
-                min={0} 
+                min={1} 
                 onChange={(e) => setPoints(e.target.value)}
             />
             {!event.published && <>

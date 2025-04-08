@@ -27,11 +27,18 @@ export default function User({userId}) {
         const headers = { Authorization: `Bearer ${token}`};
         
         const res = await ajax(path, { headers });
-        if (res.ok) {
-            const json = await res.json();
-            setTargetUser(json);
-            
+        if (res) {
+            if (res.ok) {
+                const json = await res.json();
+                setTargetUser(json);
+                return;
+            }
+            if (res.status === 404) {
+                navigate("/not-found");
+            }
         }
+        
+        
     }
     useEffect(() => {
         fetchUser();
@@ -39,7 +46,7 @@ export default function User({userId}) {
 
     useEffect(() => {
         if (user && targetUser) {
-            if (clearance.indexOf(user.role) > clearance.indexOf(targetUser.role)) {
+            if (clearance.includes(targetUser.role) && clearance.indexOf(user.role) > clearance.indexOf(targetUser.role)) {
                 setDisabled(true);
             }
             else {

@@ -26,6 +26,8 @@ function Profile() {
         </div>
         <div className="row">
             <Link to="/transactions">Transactions</Link>
+            <Link to="/promotions">Promotions</Link>
+            <Link to="/promotion">Create Promotion</Link>
         </div>
     </>;
 }

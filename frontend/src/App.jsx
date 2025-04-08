@@ -17,6 +17,9 @@ import Reset from "./pages/Reset";
 import CurrentUser from "./pages/CurrentUser";
 import Transactions from "./pages/Transactions";
 import Transaction from "./pages/Transaction";
+import Promotions from "./pages/Promotions";
+import Promotion from "./pages/Promotion";
+import CreatePromotion from "./pages/CreatePromotion";
 
 const UserWrapper = () => {
     const { userId } = useParams();
@@ -26,6 +29,11 @@ const UserWrapper = () => {
 const TransactionWrapper = () => {
     const { transactionId } = useParams();
     return <Transaction transactionId={parseInt(transactionId, 10)} />;
+};
+
+const PromotionWrapper = () => {
+    const { promotionId } = useParams();
+    return <Promotion promotionId={parseInt(promotionId, 10)} />;
 };
 
 const MyRoutes = () => {
@@ -45,6 +53,9 @@ const MyRoutes = () => {
             <Route path="users/:userId" element={<UserWrapper />} />
             <Route path="transactions" element={<Transactions />} />
             <Route path="transactions/:transactionId" element={<TransactionWrapper />} />
+            <Route path="promotion" element={<CreatePromotion />} />
+            <Route path="promotions" element={<Promotions />} />
+            <Route path="promotions/:promotionId" element={<PromotionWrapper />} />
             <Route path="*" element={<NotFound />} />
         </Route>
     </Routes>;

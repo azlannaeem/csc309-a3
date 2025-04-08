@@ -1938,7 +1938,7 @@ app.post('/events/:eventId/organizers', jwtAuth, async (req, res) => {
     }
     const event = await prisma.event.findUnique({
       where: { id },
-      include: { guests: true },
+      include: { guests: true, organizers: true },
     });
     if (!event) {
       return res.status(404).json({ error: 'Event not found' });
@@ -1946,8 +1946,11 @@ app.post('/events/:eventId/organizers', jwtAuth, async (req, res) => {
     if (event.guests.some((guest) => guest.id === user.id)) {
       return res.status(400).json({
         error:
-          'user is registered as a guest to the event (remove user as guest first, then retry)',
+          'user is registered as a guest',
       });
+    }
+    if (event.organizers.some((g) => g.id === user.id)) {
+      return res.status(400).json({ error: 'user is already an organizer' });
     }
     const now = new Date();
     const end = new Date(event.endTime);
@@ -2050,7 +2053,7 @@ app.post('/events/:eventId/guests/me', jwtAuth, async (req, res) => {
         .json({ error: 'user is registered as an organizer' });
     }
     if (event.guests.some((g) => g.id === req.user.id)) {
-      return res.status(400).json({ error: 'user is already guest' });
+      return res.status(400).json({ error: 'user is already a guest' });
     }
     const now = new Date();
     const end = new Date(event.endTime);
@@ -2175,6 +2178,9 @@ app.post('/events/:eventId/guests', jwtAuth, async (req, res) => {
       return res
         .status(400)
         .json({ error: 'user is registered as an organizer' });
+    }
+    if (event.guests.some((g) => g.id === user.id)) {
+      return res.status(400).json({ error: 'user is already a guest' });
     }
     if (!event.published && !clearance.includes(req.user.role)) {
       return res.status(404).json({ error: 'Event not found' });

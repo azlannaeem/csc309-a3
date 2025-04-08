@@ -25,6 +25,7 @@ import Promotion from './pages/Promotion';
 import CreatePromotion from './pages/CreatePromotion';
 import Events from './pages/Events';
 import Event from './pages/Event';
+import CreateEvent from './pages/CreateEvent';
 
 const UserWrapper = () => {
     const { userId } = useParams();
@@ -88,6 +89,7 @@ const MyRoutes = () => {
                     path="events/:eventId"
                     element={<EventWrapper />}
                 />
+                <Route path="event" element={<CreateEvent />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
         </Routes>

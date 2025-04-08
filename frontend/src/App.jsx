@@ -22,6 +22,8 @@ import ProcessRedemption from './pages/Cashier/ProcessRedemption';
 import Promotions from './pages/Promotions';
 import Promotion from './pages/Promotion';
 import CreatePromotion from './pages/CreatePromotion';
+import Events from './pages/Events';
+import Event from './pages/Event';
 
 const UserWrapper = () => {
     const { userId } = useParams();
@@ -37,6 +39,12 @@ const PromotionWrapper = () => {
     const { promotionId } = useParams();
     return <Promotion promotionId={parseInt(promotionId, 10)} />;
 };
+
+const EventWrapper = () => {
+    const { eventId } = useParams();
+    return <Event eventId={parseInt(eventId, 10)} />;
+};
+
 
 const MyRoutes = () => {
     return (
@@ -72,6 +80,11 @@ const MyRoutes = () => {
                 <Route
                     path="/process-redemption"
                     element={<ProcessRedemption />}
+                />
+                <Route path="events" element={<Events />} />
+                <Route
+                    path="events/:eventId"
+                    element={<EventWrapper />}
                 />
                 <Route path="*" element={<NotFound />} />
             </Route>

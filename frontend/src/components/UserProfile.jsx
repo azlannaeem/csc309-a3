@@ -1,5 +1,7 @@
 import { BACKEND_URL } from "../contexts/APIContext";
+import { useNavigate } from "react-router-dom";
 export default function UserProfile ({ user }) {
+    const navigate = useNavigate();
     const formatDate = (dateString, isBirthday) => {
       if (!dateString) return "N/A";
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -44,7 +46,7 @@ export default function UserProfile ({ user }) {
           {user.promotions && user.promotions.length > 0 ? (
             <ul>
               {user.promotions.map((promotion) => (
-                <li key={promotion.id}>
+                <li className="clickable" key={promotion.id} onClick={() => navigate(`/promotions/${promotion.id}`)}>
                   <p><strong>Promotion:</strong> {promotion.name}</p>
                   <p><strong>Points:</strong> {promotion.points}</p>
                   <p><strong>Min Spending:</strong> {promotion.minSpending ? promotion.minSpending : "N/A"}</p>

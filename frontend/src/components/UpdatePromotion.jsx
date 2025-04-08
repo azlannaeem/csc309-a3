@@ -18,9 +18,9 @@ export default function UpdatePromotion({promotion, setEdit}) {
     const [type, setType] = useState(promotion.type);
     const [startTime, setStartTime] = useState(convertToLocalTimeString(promotion.startTime));
     const [endTime, setEndTime] = useState(convertToLocalTimeString(promotion.endTime));
-    const [minSpending, setMinSpending] = useState(promotion.minSpending);
-    const [rate, setRate] = useState(promotion.rate);
-    const [points, setPoints] = useState(promotion.points);
+    const [minSpending, setMinSpending] = useState(promotion.minSpending ? `${promotion.minSpending}` : "");
+    const [rate, setRate] = useState(promotion.rate ? `${promotion.rate}` : "");
+    const [points, setPoints] = useState(`${promotion.points}`);
 
     const [error, setError] = useState("");
     const {ajax, fetching} = useAPI();
@@ -42,13 +42,13 @@ export default function UpdatePromotion({promotion, setEdit}) {
         if (endTime !== convertToLocalTimeString(promotion.endTime)) {
             updatedPromotion.endTime = new Date(endTime);
         }
-        if (minSpending !== promotion.minSpending) {
+        if (minSpending && parseFloat(minSpending) !== promotion.minSpending) {
             updatedPromotion.minSpending = parseFloat(minSpending);
         }
-        if (rate !== promotion.rate) {
+        if (rate && parseFloat(rate) !== promotion.rate) {
             updatedPromotion.rate = parseFloat(rate);
         }
-        if (points !== promotion.points) {
+        if (points && parseInt(points) !== promotion.points) {
             updatedPromotion.points = parseInt(points);
         }
         if (Object.keys(updatedPromotion).length < 1) {

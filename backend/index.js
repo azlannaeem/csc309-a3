@@ -1835,6 +1835,10 @@ app.patch('/events/:eventId', jwtAuth, async (req, res) => {
       }
       select.capacity = true;
     }
+    if (capacity === null) {
+      data.capacity = null;
+      select.capacity = true;
+    }
 
     if (published !== undefined && published !== null) {
       if (req.user.role !== 'manager') {
@@ -1848,7 +1852,7 @@ app.patch('/events/:eventId', jwtAuth, async (req, res) => {
     }
     const oldStart = new Date(event.startTime);
     if (
-      (name || description || location || startTime || capacity) &&
+      (name || description || location || startTime || data.capacity) &&
       now >= oldStart
     ) {
       return res.status(400).json({ error: 'Cannot change after event has started' });

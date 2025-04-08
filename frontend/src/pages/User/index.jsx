@@ -46,7 +46,7 @@ export default function User({userId}) {
 
     useEffect(() => {
         if (user && targetUser) {
-            if (clearance.indexOf(user.role) > clearance.indexOf(targetUser.role)) {
+            if (clearance.includes(targetUser.role) && clearance.indexOf(user.role) > clearance.indexOf(targetUser.role)) {
                 setDisabled(true);
             }
             else {

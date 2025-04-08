@@ -43,11 +43,11 @@ async function main() {
   ];
 
   const passwords = [
-    'apple123!',
-    'banana456!',
-    'grape789!',
-    'lemon321!',
-    'melon999!',
+    'Apple123!',
+    'Banana456!',
+    'Grape789!',
+    'Lemon321!',
+    'Melon999!',
   ];
 
   for (let i = 0; i < roleDistribution.length; i++) {
@@ -64,7 +64,7 @@ async function main() {
         email,
         password,
         role,
-        verified: true,
+        verified: i % 3 !== 0, // make some unverified
       },
     });
 
@@ -82,8 +82,8 @@ async function main() {
         name: `Promo ${i}`,
         description: `Earn or save with Promo ${i}`,
         type: promoTypes[i % 2],
-        startTime: startTime.toISOString(),
-        endTime: endTime.toISOString(),
+        startTime,
+        endTime,
         rate: 0.05 * i,
         points: i * 20,
         minSpending: 10 * i,
@@ -100,13 +100,13 @@ async function main() {
 
   for (let i = 0; i < 12; i++) {
     const start = new Date(Date.now() + (i + 1) * 86400000);
-    const end = new Date(start.getTime() + 2 * 3600000); // +2hr
+    const end = new Date(start.getTime() + 2 * 3600000);
     const event = await prisma.event.create({
       data: {
         name: `Event ${i + 1}`,
         location: locations[i % locations.length],
-        startTime: start.toISOString(),
-        endTime: end.toISOString(),
+        startTime: start,
+        endTime: end,
         pointsRemain: (i + 1) * 50,
         pointsAwarded: 0,
         organizers: {
@@ -152,10 +152,24 @@ async function main() {
 
   console.log('Creating 40 varied transactions...');
   const txTypes = ['purchase', 'transfer', 'adjustment'];
+
   for (let i = 0; i < 40; i++) {
     const sender = users[(i + 1) % users.length];
     const receiver = users[(i + 2) % users.length];
-    const type = txTypes[i % txTypes.length];
+
+    let type = txTypes[i % txTypes.length];
+    if (sender.role === 'regular') {
+      // restrict to valid types
+      type = i % 2 === 0 ? 'transfer' : 'redemption';
+    }
+
+    if (
+      (type === 'adjustment' || type === 'purchase') &&
+      sender.role === 'regular'
+    ) {
+      continue;
+    }
+
     const tx = {
       type,
       amount: 50 + i,
@@ -163,9 +177,11 @@ async function main() {
       utorid: sender.utorid,
       remark: `Transaction #${i + 1}`,
     };
+
     if (type === 'purchase') tx.spent = tx.amount;
     if (type === 'transfer' || type === 'adjustment')
       tx.relatedId = receiver.id;
+
     await prisma.transaction.create({ data: tx });
   }
 

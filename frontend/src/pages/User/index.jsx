@@ -27,11 +27,18 @@ export default function User({userId}) {
         const headers = { Authorization: `Bearer ${token}`};
         
         const res = await ajax(path, { headers });
-        if (res.ok) {
-            const json = await res.json();
-            setTargetUser(json);
-            
+        if (res) {
+            if (res.ok) {
+                const json = await res.json();
+                setTargetUser(json);
+                return;
+            }
+            if (res.status === 404) {
+                navigate("/not-found");
+            }
         }
+        
+        
     }
     useEffect(() => {
         fetchUser();

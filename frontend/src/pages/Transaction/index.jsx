@@ -29,10 +29,15 @@ export default function Transaction({transactionId}) {
         const headers = { Authorization: `Bearer ${token}`};
         
         const res = await ajax(path, { headers });
-        if (res.ok) {
-            const json = await res.json();
-            setTransaction(json);
-            
+        if (res) {
+            if (res.ok) {
+                const json = await res.json();
+                setTransaction(json);
+                return;
+            }
+            if (res.status === 404) {
+                navigate("/not-found");
+            }
         }
     }
 

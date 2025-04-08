@@ -1,9 +1,17 @@
 import { BACKEND_URL } from "../contexts/APIContext";
 export default function UserProfile ({ user }) {
-    const formatDate = (date) => {
-      if (!date) return "N/A";
+    const formatDate = (dateString, isBirthday) => {
+      if (!dateString) return "N/A";
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return new Date(date).toLocaleDateString(undefined, options);
+      var date;
+      if (isBirthday) {
+        const [year, month, day] = dateString.split('-');
+        date = new Date(year, month - 1, day); 
+      }
+      else {
+        date = new Date(dateString);
+      }
+      return date.toLocaleDateString('en-US', options);
     };
   
     return (
@@ -22,13 +30,13 @@ export default function UserProfile ({ user }) {
           <p><strong>UtorID:</strong> {user.utorid}</p>
           <p><strong>Name:</strong> {user.name}</p>
           <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Birthday:</strong> {user.birthday || "N/A"}</p>
+          <p><strong>Birthday:</strong> {formatDate(user.birthday, true)}</p>
           <p><strong>Role:</strong> {user.role}</p>
           <p><strong>Points:</strong> {user.points}</p>
           <p><strong>Verified:</strong> {user.verified ? "Yes" : "No"}</p>
           {user.suspicious !== undefined && <p><strong>Suspicious:</strong> {user.suspicious ? "Yes" : "No"}</p>}
-          <p><strong>Account Created:</strong> {formatDate(user.createdAt)}</p>
-          <p><strong>Last Login:</strong> {formatDate(user.lastLogin)}</p>
+          <p><strong>Account Created:</strong> {formatDate(user.createdAt, false)}</p>
+          <p><strong>Last Login:</strong> {formatDate(user.lastLogin, false)}</p>
         </div>
   
         <div className="promotions">

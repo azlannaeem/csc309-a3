@@ -1784,11 +1784,11 @@ app.patch('/events/:eventId', jwtAuth, async (req, res) => {
           .json({ error: 'endTime must be a non-empty string' });
       }
       end = new Date(endTime);
-      if (isNaN(end.getTime()) || end < now ) {
-        return res.status(400).json({ error: 'Invalid endTime' });
-      }
       if (now >= oldEnd) {
         return res.status(400).json({ error: 'Cannot change after event has ended' });
+      }
+      if (isNaN(end.getTime()) || end < now ) {
+        return res.status(400).json({ error: 'Invalid endTime' });
       }
       data.endTime = endTime;
       select.endTime = true;
@@ -2730,11 +2730,11 @@ app.patch('/promotions/:promotionId', jwtAuth, async (req, res) => {
           .json({ error: 'endTime must be a non-empty string' });
       }
       end = new Date(endTime);
-      if (isNaN(end.getTime()) || end < now) {
-        return res.status(400).json({ error: 'Invalid endTime' });
-      }
       if (now >= oldEnd) {
         return res.status(400).json({ error: 'Cannot change after promotion has ended' });
+      }
+      if (isNaN(end.getTime()) || end < now) {
+        return res.status(400).json({ error: 'Invalid endTime' });
       }
       data.endTime = endTime;
       select.endTime = true;
@@ -2835,7 +2835,7 @@ app.delete('/promotions/:promotionId', jwtAuth, async (req, res) => {
     const now = new Date();
     const start = new Date(promotion.startTime);
     if (now >= start) {
-      return res.status(403).json({ error: 'Forbidden' });
+      return res.status(403).json({ error: 'Promotion cannot be deleted after it has started' });
     }
     await prisma.promotion.delete({ where: { id } });
     res.status(204).send();

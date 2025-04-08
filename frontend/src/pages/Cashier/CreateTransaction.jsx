@@ -1,16 +1,45 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAPI } from '../../contexts/APIContext';
 
 export default function CreateTransaction() {
     const [utorid, setUtorid] = useState('');
     const [amount, setAmount] = useState('');
     const [remark, setRemark] = useState('');
+    const [promotionIds, setPromotionIds] = useState('');
+    const [availablePromotions, setAvailablePromotions] = useState([]);
     const [message, setMessage] = useState('');
     const { ajax } = useAPI();
     const token = localStorage.getItem('token');
 
+    useEffect(() => {
+        const fetchPromos = async () => {
+            const resp = await ajax('/promotions', {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (resp && resp.ok) {
+                const data = await resp.json();
+                console.log('Available promos: ', data);
+                console.log('Available promos results: ', data.results);
+                setAvailablePromotions(data.results || []);
+            }
+        };
+        fetchPromos();
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const promoList = promotionIds
+            .split(',')
+            .map((id) => parseInt(id.trim()))
+            .filter((id) => !isNaN(id));
+
+        const validPromoIds = availablePromotions.map((p) => p.id);
+        const invalid = promoList.filter((id) => !validPromoIds.includes(id));
+        if (invalid.length > 0) {
+            setMessage(`Promotion ID ${invalid[0]} is not a valid promotion.`);
+            return;
+        }
 
         const resp = await ajax('/transactions', {
             method: 'POST',
@@ -21,8 +50,9 @@ export default function CreateTransaction() {
             body: JSON.stringify({
                 utorid,
                 spent: parseFloat(amount),
-                remark,
+                remark: remark || undefined,
                 type: 'purchase',
+                promotionIds: promoList,
             }),
         });
 
@@ -32,6 +62,7 @@ export default function CreateTransaction() {
             setUtorid('');
             setAmount('');
             setRemark('');
+            setPromotionIds('');
         } else {
             const json = await resp.json();
             setMessage(`Error: ${json.error}`);
@@ -61,6 +92,15 @@ export default function CreateTransaction() {
                 <input
                     value={remark}
                     onChange={(e) => setRemark(e.target.value)}
+                />
+                <label htmlFor="promotionIds">
+                    Promotion IDs (comma-separated):
+                </label>
+                <input
+                    type="text"
+                    name="promotionIds"
+                    value={promotionIds}
+                    onChange={(e) => setPromotionIds(e.target.value)}
                 />
 
                 <button type="submit">Create</button>

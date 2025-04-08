@@ -10,11 +10,13 @@ export default function ProcessRedemption() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const resp = await ajax(`/redemptions/${transactionId}/process`, {
-      method: 'POST',
+    const resp = await ajax(`/transactions/${transactionId}/processed`, {
+      method: 'PATCH',
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
-      }
+      },
+      body: JSON.stringify({ processed: true }),
     });
 
     if (resp.ok) {

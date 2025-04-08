@@ -17,6 +17,8 @@ import Reset from "./pages/Reset";
 import CurrentUser from "./pages/CurrentUser";
 import Transactions from "./pages/Transactions";
 import Transaction from "./pages/Transaction";
+import CreateTransaction from "./pages/Cashier/CreateTransaction";
+import ProcessRedemption from "./pages/Cashier/ProcessRedemption";
 
 const UserWrapper = () => {
     const { userId } = useParams();
@@ -45,6 +47,8 @@ const MyRoutes = () => {
             <Route path="users/:userId" element={<UserWrapper />} />
             <Route path="transactions" element={<Transactions />} />
             <Route path="transactions/:transactionId" element={<TransactionWrapper />} />
+            <Route path="/create-transaction" element={<CreateTransaction />} />
+            <Route path="/process-redemption" element={<ProcessRedemption />} />
             <Route path="*" element={<NotFound />} />
         </Route>
     </Routes>;

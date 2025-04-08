@@ -21,7 +21,9 @@ function Profile() {
         <div className="row">
             <Link to="/users/me">View Profile</Link>
             <Link to="/register">Register</Link>
-            <Link onClick={logout}>Logout</Link>  
+            <Link to="/create-transaction">Create Transaction</Link>
+            <Link to="/process-redemption">Process Redemption</Link>
+            <Link onClick={logout}>Logout</Link>
         </div>
     </>;
 }

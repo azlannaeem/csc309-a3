@@ -1784,8 +1784,11 @@ app.patch('/events/:eventId', jwtAuth, async (req, res) => {
           .json({ error: 'endTime must be a non-empty string' });
       }
       end = new Date(endTime);
-      if (isNaN(end.getTime()) || end < now || now >= oldEnd) {
+      if (isNaN(end.getTime()) || end < now ) {
         return res.status(400).json({ error: 'Invalid endTime' });
+      }
+      if (now >= oldEnd) {
+        return res.status(400).json({ error: 'Cannot change after event has ended' });
       }
       data.endTime = endTime;
       select.endTime = true;
@@ -1848,7 +1851,7 @@ app.patch('/events/:eventId', jwtAuth, async (req, res) => {
       (name || description || location || startTime || capacity) &&
       now >= oldStart
     ) {
-      return res.status(400).json({ error: 'too late' });
+      return res.status(400).json({ error: 'Cannot change after event has started' });
     }
     if (start && end && start >= end) {
       return res.status(400).json({ error: 'Invalid startTime, endTime' });
@@ -2727,8 +2730,11 @@ app.patch('/promotions/:promotionId', jwtAuth, async (req, res) => {
           .json({ error: 'endTime must be a non-empty string' });
       }
       end = new Date(endTime);
-      if (isNaN(end.getTime()) || end < now || now >= oldEnd) {
+      if (isNaN(end.getTime()) || end < now) {
         return res.status(400).json({ error: 'Invalid endTime' });
+      }
+      if (now >= oldEnd) {
+        return res.status(400).json({ error: 'Cannot change after promotion has ended' });
       }
       data.endTime = endTime;
       select.endTime = true;
@@ -2769,7 +2775,7 @@ app.patch('/promotions/:promotionId', jwtAuth, async (req, res) => {
     }
 
     if (type !== undefined && type !== null) {
-      if (type !== 'automatic' || type !== 'one-time') {
+      if (type !== 'automatic' && type !== 'one-time') {
         return res.status(400).json({ error: 'Invalid type' });
       }
       data.type = type;
@@ -2786,7 +2792,7 @@ app.patch('/promotions/:promotionId', jwtAuth, async (req, res) => {
         points) &&
       now >= oldStart
     ) {
-      return res.status(400).json({ error: 'too late' });
+      return res.status(400).json({ error: "Cannot change after promotion has started" });
     }
     if (start && end && start >= end) {
       return res.status(400).json({ error: 'Invalid startTime, endTime' });

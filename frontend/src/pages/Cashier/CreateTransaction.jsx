@@ -19,7 +19,6 @@ export default function CreateTransaction() {
             if (resp && resp.ok) {
                 const data = await resp.json();
                 console.log('Available promos: ', data);
-                console.log('Available promos results: ', data.results);
                 setAvailablePromotions(data.results || []);
             }
         };

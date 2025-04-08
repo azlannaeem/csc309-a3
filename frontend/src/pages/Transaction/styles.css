@@ -1,48 +1,25 @@
-.user-avatar {
-    text-align: center;
+.amount {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.user-info {
+.amount input[type="number"] {
+    height: 40px;
+    width: 50px;
+}
+
+.amount textarea {
+    resize: none;
+    width: 300px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+}
+
+.adjustment {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-
-.update input[type="checkbox"] {
-    width: 1rem;
-    height: 1rem;
-    transform: translateY(2px);
-}
-
-.avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.buttons {
-    grid-column: span 2;
-}
-
-.avatar-placeholder {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background-color: #ccc;
-    text-align: center;
-    line-height: 100px;
-    color: white;
-}
-
-.promotions ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.promotions li {
-    margin-bottom: 15px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
+    gap: 1rem;
+    align-items: center;
 }
   

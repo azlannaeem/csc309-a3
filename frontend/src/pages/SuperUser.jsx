@@ -24,6 +24,11 @@ function Profile() {
             <Link to="/users">Users</Link>
             <Link onClick={logout}>Logout</Link>        
         </div>
+        <div className="row">
+            <Link to="/transactions">Transactions</Link>
+            <Link to="/promotions">Promotions</Link>
+            <Link to="/promotion">Create Promotion</Link>
+        </div>
     </>;
 }
 

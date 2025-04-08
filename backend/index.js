@@ -1695,7 +1695,7 @@ app.get('/events', jwtAuth, async (req, res) => {
             where,
             skip,
             take: limit,
-            include: { guests: true },
+            include: { guests: true, organizers: true },
         });
         const count = await prisma.event.count({ where });
         if (!clearance.includes(req.user.role)) {
@@ -1708,6 +1708,11 @@ app.get('/events', jwtAuth, async (req, res) => {
                     endTime: e.endTime,
                     capacity: e.capacity,
                     numGuests: e.guests.length,
+                    organizers: e.organizers.map((o) => ({
+                        id: o.id,
+                        utorid: o.utorid,
+                        name: o.name,
+                    })),
                 };
             });
             return res.json({ count, results });
@@ -1724,6 +1729,11 @@ app.get('/events', jwtAuth, async (req, res) => {
                     pointsAwarded: e.pointsAwarded,
                     published: e.published,
                     numGuests: e.guests.length,
+                    organizers: e.organizers.map((o) => ({
+                        id: o.id,
+                        utorid: o.utorid,
+                        name: o.name,
+                    })),
                 };
             });
             return res.json({ count, results });

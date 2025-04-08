@@ -18,7 +18,8 @@ function Profile() {
         <h3>Hello, {user?.name}!</h3>
         <div className="row">
             <Link to="/users/me">View Profile</Link>
-            <Link onClick={logout}>Logout</Link>  
+            <Link onClick={logout}>Logout</Link>
+            <Link to="/transfer-points">Transfer Points</Link>  
         </div>
     </>;
 }

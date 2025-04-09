@@ -21,6 +21,7 @@ function Profile() {
             <Link onClick={logout}>Logout</Link>
             <Link to="/transfer-points">Transfer Points</Link>
             <Link to="/published-events">View Published Events</Link>  
+            <Link to="/my-transactions">View Transactions</Link>
         </div>
     </>;
 }

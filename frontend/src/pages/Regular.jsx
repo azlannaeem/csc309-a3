@@ -19,7 +19,8 @@ function Profile() {
         <div className="row">
             <Link to="/users/me">View Profile</Link>
             <Link onClick={logout}>Logout</Link>
-            <Link to="/transfer-points">Transfer Points</Link>  
+            <Link to="/transfer-points">Transfer Points</Link>
+            <Link to="/published-events">View Published Events</Link>  
         </div>
     </>;
 }

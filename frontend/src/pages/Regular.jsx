@@ -28,7 +28,7 @@ function Profile() {
                 <Link to="/redemption-request">Redemption Request</Link>
             </div>
             <div className="row">
-                {user?.isOrganizer && <Link to="/events">My Events</Link>}
+                {user?.isOrganizer && <Link to="/myevents">My Events</Link>}
             </div>
             <div className="row">
                 <Link to="/unprocessed-redemptions">

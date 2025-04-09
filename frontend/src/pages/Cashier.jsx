@@ -27,7 +27,7 @@ function Profile() {
                 <Link onClick={logout}>Logout</Link>
             </div>
             <div className="row">
-                {user?.isOrganizer && <Link to="/events">My Events</Link>}
+                {user?.isOrganizer && <Link to="/myevents">My Events</Link>}
             </div>
         </>
     );

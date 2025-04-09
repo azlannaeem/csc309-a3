@@ -30,7 +30,7 @@ function Profile() {
                 <Link to="/promotion">Create Promotion</Link>
             </div>
             <div className="row">
-                {user?.isOrganizer && <Link to="/events">My Events</Link>}
+                {user?.isOrganizer && <Link to="/myevents">My Events</Link>}
             </div>
             <div className="row">
                 <Link to="/events">Events</Link>

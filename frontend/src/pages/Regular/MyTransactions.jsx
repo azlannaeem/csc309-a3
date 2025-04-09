@@ -15,7 +15,7 @@ export default function MyTransactions() {
         redemption: false,
         purchase: false,
         adjustment: false,
-        event: false, // Added the event filter
+        event: false, 
     });
 
     const { ajax } = useAPI();
@@ -167,6 +167,7 @@ export default function MyTransactions() {
                                 <th>Type</th>
                                 <th>CreatedBy</th>
                                 <th>Remark</th>
+                                <th>Processed By</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -182,6 +183,7 @@ export default function MyTransactions() {
                                         <td>{t.type}</td>
                                         <td>{t.createdBy}</td>
                                         <td>{t.remark}</td>
+                                        <td>{t.processedBy}</td>
                                     </tr>
                                 ))
                             ) : (

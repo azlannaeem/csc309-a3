@@ -1,5 +1,7 @@
 import { BACKEND_URL } from "../contexts/APIContext";
 import { useNavigate } from "react-router-dom";
+import { QRCodeCanvas } from "qrcode.react";
+import "./UserProfile.css";
 export default function UserProfile ({ user, flag=false }) {
     const navigate = useNavigate();
     const formatDate = (dateString, isBirthday) => {
@@ -57,6 +59,11 @@ export default function UserProfile ({ user, flag=false }) {
           ) : (
             <p>No promotions available.</p>
           )}
+        </div>
+        <div className="qr-code">
+          <h3>QR Code</h3>
+          <QRCodeCanvas value={`${user.name}'s User id: ${user.id}`} size={150} />
+          <p>Scan this QR code to get user ID!</p>
         </div>
       </>
     );

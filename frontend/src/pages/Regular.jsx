@@ -26,6 +26,9 @@ function Profile() {
             <Link to="/my-transactions">View Transactions</Link>
             <Link to="/redemption-request">Redemption Request</Link>
         </div>
+        <div className="row">
+            <Link to="/unprocessed-redemptions">Unprocessed Redemptions</Link>
+        </div>
     </>;
 }
 

@@ -3,7 +3,6 @@ import Table from "./Table";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useAPI } from "../../contexts/APIContext";
-import './styles.css'
 
 function to_url(query, path) {
     var result = [];
@@ -165,16 +164,6 @@ export default function Transactions() {
                             setSearchParams(updated);
                         }}
                         checked={query.suspicious === "false"} 
-                    />
-                </div>
-                <div className="input-container">
-                    <label htmlFor="promotionId">Promotion ID:</label>
-                    <input 
-                        type='number'
-                        name="promotionId"
-                        value={query.promotionId || ''}
-                        min={0} 
-                        onChange={(e) => handleChange(e)}
                     />
                 </div>
                 <div className="input-container">

@@ -22,7 +22,6 @@ function Profile() {
                 <Link to="/users/me">View Profile</Link>
                 <Link to="/register">Register</Link>
                 <Link to="/users">Users</Link>
-                <Link onClick={logout}>Logout</Link>
             </div>
             <div className="row">
                 <Link to="/transactions">Transactions</Link>
@@ -31,10 +30,11 @@ function Profile() {
             </div>
             <div className="row">
                 {user?.isOrganizer && <Link to="/myevents">My Events</Link>}
-            </div>
-            <div className="row">
                 <Link to="/events">Events</Link>
                 <Link to="/event">Create Event</Link>
+            </div>
+            <div className='row'>
+                <Link onClick={logout}>Logout</Link>
             </div>
         </>
     );

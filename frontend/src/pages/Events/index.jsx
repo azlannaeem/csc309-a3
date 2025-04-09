@@ -3,7 +3,6 @@ import Table from "./Table";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useAPI } from "../../contexts/APIContext";
-import './styles.css'
 
 function to_url(query, path) {
     var result = [];

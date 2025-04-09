@@ -672,6 +672,7 @@ app.post('/auth/tokens', async (req, res) => {
         expiresAt.setHours(expiresAt.getHours() + 1);
         res.json({ token, expiresAt });
     } catch (error) {
+        console.error('login error: ', error);
         res.status(500).json({ error });
     }
 });
@@ -1063,7 +1064,6 @@ app.get('/transactions', jwtAuth, async (req, res) => {
             utorid: name || undefined,
             createdBy: createdBy || undefined,
             suspicious,
-            promotionIds: isNaN(promotionId) ? undefined : { has: promotionId },
             type: type || undefined,
             relatedId: isNaN(relatedId) ? undefined : relatedId,
             amount: isNaN(amount) ? undefined : { [operator]: amount },
@@ -1956,10 +1956,14 @@ app.patch('/events/:eventId', jwtAuth, async (req, res) => {
             if (capacity === numGuests) {
                 data.full = true;
             }
+            else {
+                data.full = false;
+            }
             select.capacity = true;
         }
         if (capacity === null) {
             data.capacity = null;
+            data.full = false;
             select.capacity = true;
         }
 

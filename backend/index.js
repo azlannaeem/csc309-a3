@@ -1236,6 +1236,7 @@ app.get('/users/me/transactions', jwtAuth, async (req, res) => {
     const amount = parseInt(req.query.amount);
 
     const where = {
+      utorid: req.user.utorid,
       promotionIds: isNaN(promotionId) ? undefined : { has: promotionId },
       type: type || undefined,
       relatedId: isNaN(relatedId) ? undefined : relatedId,
@@ -1255,6 +1256,7 @@ app.get('/users/me/transactions', jwtAuth, async (req, res) => {
         promotionIds: true,
         remark: true,
         createdBy: true,
+        utorid: true,
       },
     });
     const results = transactions.map((transaction) => {

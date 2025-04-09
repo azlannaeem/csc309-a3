@@ -13,7 +13,9 @@ import Users from './pages/Users';
 import { APIProvider } from './contexts/APIContext';
 import NotFound from './pages/NotFound';
 import User from './pages/User';
-import TransferPoints from './pages/Regular/TransferPoints'; 
+import TransferPoints from './pages/Regular/TransferPoints';
+import PublishedEvents from './pages/Regular/PublishedEvents';
+import MyTransactions from './pages/Regular/MyTransactions';
 import Reset from './pages/Reset';
 import CurrentUser from './pages/CurrentUser';
 import Transactions from './pages/Transactions';
@@ -84,6 +86,8 @@ const MyRoutes = () => {
                     element={<ProcessRedemption />}
                 />
                 <Route path="/transfer-points" element={<TransferPoints />} />
+                <Route path="/published-events" element={<PublishedEvents />} />
+                <Route path="/my-transactions" element={<MyTransactions />} />
                 <Route path="events" element={<Events />} />
                 <Route
                     path="events/:eventId"

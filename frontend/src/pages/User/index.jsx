@@ -10,6 +10,7 @@ export default function User({userId}) {
     const { ajax } = useAPI();
     const [targetUser, setTargetUser] = useState(null);
     const [edit, setEdit] = useState(false);
+    const [flag, setFlag] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
@@ -19,6 +20,9 @@ export default function User({userId}) {
     useEffect(() => {
         if (!token || (user && !clearance.includes(user.role))) {
             navigate("/login");
+        }
+        if (user && clearance.includes(user.role)) {
+            setFlag(true);
         }
     }, [token, user]); 
 
@@ -67,7 +71,7 @@ export default function User({userId}) {
             <>
             {targetUser && 
                 <>
-                <UserProfile user={targetUser} />
+                <UserProfile user={targetUser} flag={flag} />
                 {!disabled && <button onClick={() => setEdit(true)}>Edit</button>}
                 </>
             }

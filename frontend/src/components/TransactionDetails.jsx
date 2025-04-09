@@ -14,7 +14,7 @@ export default function TransactionDetails ({ transaction, created }) {
     return (
         <>
         {created ? 
-        <h2>Adjustment Created</h2> :
+        <h2>Transaction Created</h2> :
         <h2>Transaction Details</h2>
       }
   

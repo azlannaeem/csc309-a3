@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import Table from "./Table";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useAPI } from "../../contexts/APIContext";
 import './styles.css'
@@ -24,6 +24,7 @@ function to_url(query, path) {
 
 export default function Transactions() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [transactions, setTransactions] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams(); 
     const [totalPages, setTotalPages] = useState(0);
@@ -32,6 +33,7 @@ export default function Transactions() {
     const { user } = useAuth();
     const token = localStorage.getItem("token");
     const clearance = ["superuser", "manager"];
+    const {created} = location.state || {};
 
     useEffect(() => {
         if (!token || (user && !clearance.includes(user.role))) {
@@ -110,7 +112,7 @@ export default function Transactions() {
 
     return (
         <>
-            <h1>Transactions</h1>
+            {created ? <h1>Transactions Created</h1> : <h1>Transactions</h1> }
             <div className="filters">
                 <div className="input-container">
                     <label htmlFor="name">Name:</label>

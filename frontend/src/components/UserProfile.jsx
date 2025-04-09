@@ -1,5 +1,9 @@
 import { BACKEND_URL } from "../contexts/APIContext";
-export default function UserProfile ({ user }) {
+import { useNavigate } from "react-router-dom";
+import { QRCodeCanvas } from "qrcode.react";
+import "./UserProfile.css";
+export default function UserProfile ({ user, flag=false }) {
+    const navigate = useNavigate();
     const formatDate = (dateString, isBirthday) => {
       if (!dateString) return "N/A";
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -44,7 +48,7 @@ export default function UserProfile ({ user }) {
           {user.promotions && user.promotions.length > 0 ? (
             <ul>
               {user.promotions.map((promotion) => (
-                <li key={promotion.id}>
+                <li key={promotion.id} className={flag ? "clickable" : ""} {...(flag && { onClick: () => navigate(`/promotions/${promotion.id}`) })}>                  
                   <p><strong>Promotion:</strong> {promotion.name}</p>
                   <p><strong>Points:</strong> {promotion.points}</p>
                   <p><strong>Min Spending:</strong> {promotion.minSpending ? promotion.minSpending : "N/A"}</p>
@@ -55,6 +59,11 @@ export default function UserProfile ({ user }) {
           ) : (
             <p>No promotions available.</p>
           )}
+        </div>
+        <div className="qr-code">
+          <h3>QR Code</h3>
+          <QRCodeCanvas value={`${user.name}'s User id: ${user.id}`} size={150} />
+          <p>Scan this QR code to get user ID!</p>
         </div>
       </>
     );

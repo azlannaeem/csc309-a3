@@ -2050,11 +2050,9 @@ app.post('/events/:eventId/organizers', jwtAuth, async (req, res) => {
 
         const { utorid, ...rest } = req.body;
         if (Object.keys(rest).length > 0) {
-            return res
-                .status(400)
-                .json({
-                    error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
-                });
+            return res.status(400).json({
+                error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
+            });
         }
         if (typeof utorid !== 'string' || !utorid) {
             return res.status(400).json({ error: 'utorid must be string' });
@@ -2277,11 +2275,9 @@ app.post('/events/:eventId/guests', jwtAuth, async (req, res) => {
 
         const { utorid, ...rest } = req.body;
         if (Object.keys(rest).length > 0) {
-            return res
-                .status(400)
-                .json({
-                    error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
-                });
+            return res.status(400).json({
+                error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
+            });
         }
         if (typeof utorid !== 'string' || !utorid) {
             return res.status(400).json({ error: 'utorid must be string' });

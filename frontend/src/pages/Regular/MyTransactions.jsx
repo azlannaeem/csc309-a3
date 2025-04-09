@@ -14,7 +14,8 @@ export default function MyTransactions() {
         transfer: false,
         redemption: false,
         purchase: false,
-        adjustment: false,  
+        adjustment: false,
+        event: false, // Added the event filter
     });
 
     const { ajax } = useAPI();
@@ -75,19 +76,21 @@ export default function MyTransactions() {
                     redemption: false,
                     purchase: false,
                     adjustment: false,
+                    event: false, 
                 };
             }
             return {
                 transfer: type === "transfer",
                 redemption: type === "redemption",
                 purchase: type === "purchase",
-                adjustment: type === "adjustment",  
+                adjustment: type === "adjustment",
+                event: type === "event", 
             };
         });
         setPage(1);
     };
 
-    // Helper function to determine the style based on transaction type
+    // Helper function to determine the style based on transaction type 
     const getTransactionTypeStyle = (type) => {
         switch (type) {
             case "transfer":
@@ -98,6 +101,8 @@ export default function MyTransactions() {
                 return { backgroundColor: "#cce0ff", color: "#004080" }; 
             case "adjustment":
                 return { backgroundColor: "#fff2cc", color: "#cc8c00" }; 
+            case "event": 
+                return { backgroundColor: "#ffebcc", color: "#b86b00" }; 
             default:
                 return {};
         }
@@ -144,6 +149,14 @@ export default function MyTransactions() {
                             />
                             Adjustment
                         </label>
+                        <label style={{ marginLeft: "1rem" }}>
+                            <input
+                                type="checkbox"
+                                checked={filters.event}
+                                onChange={() => handleFilterChange("event")}
+                            />
+                            Event
+                        </label>
                     </div>
                     <table>
                         <thead>
@@ -173,7 +186,7 @@ export default function MyTransactions() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="5" style={{ textAlign: "center" }}>
+                                    <td colSpan="6" style={{ textAlign: "center" }}>
                                         No transactions available.
                                     </td>
                                 </tr>

@@ -22,6 +22,7 @@ import Transactions from './pages/Transactions';
 import Transaction from './pages/Transaction';
 import CreateTransaction from './pages/Cashier/CreateTransaction';
 import ProcessRedemption from './pages/Cashier/ProcessRedemption';
+import RedemptionRequest from "./pages/Regular/RedemptionRequest";
 import Promotions from './pages/Promotions';
 import Promotion from './pages/Promotion';
 import CreatePromotion from './pages/CreatePromotion';
@@ -88,6 +89,7 @@ const MyRoutes = () => {
                 <Route path="/transfer-points" element={<TransferPoints />} />
                 <Route path="/published-events" element={<PublishedEvents />} />
                 <Route path="/my-transactions" element={<MyTransactions />} />
+                <Route path="/redemption-request" element={<RedemptionRequest />} />
                 <Route path="events" element={<Events />} />
                 <Route
                     path="events/:eventId"

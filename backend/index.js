@@ -1402,6 +1402,15 @@ app.patch(
       }
       const amount = transaction.amount;
 
+      const user = await prisma.user.findUnique({
+        where: { utorid: transaction.utorid },
+        select: { points: true },
+      });
+
+      if (user.points + amount < 0) {
+        return res.status(400).json({ error: 'Not enough points to redeem.' });
+      }
+
       const updated = await prisma.transaction.update({
         where: { id },
         data: { processedBy: req.user.utorid },

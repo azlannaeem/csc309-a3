@@ -23,6 +23,7 @@ import Transaction from './pages/Transaction';
 import CreateTransaction from './pages/Cashier/CreateTransaction';
 import ProcessRedemption from './pages/Cashier/ProcessRedemption';
 import RedemptionRequest from "./pages/Regular/RedemptionRequest";
+import UnprocessedRedemptions from './pages/Regular/UnprocessedRedemptions';
 import Promotions from './pages/Promotions';
 import Promotion from './pages/Promotion';
 import CreatePromotion from './pages/CreatePromotion';
@@ -90,6 +91,7 @@ const MyRoutes = () => {
                 <Route path="/published-events" element={<PublishedEvents />} />
                 <Route path="/my-transactions" element={<MyTransactions />} />
                 <Route path="/redemption-request" element={<RedemptionRequest />} />
+                <Route path="/unprocessed-redemptions" element={<UnprocessedRedemptions />} />
                 <Route path="events" element={<Events />} />
                 <Route
                     path="events/:eventId"

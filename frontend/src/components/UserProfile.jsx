@@ -63,7 +63,7 @@ export default function UserProfile ({ user, flag=false }) {
         <div className="qr-code">
           <h3>QR Code</h3>
           <QRCodeCanvas value={`${user.name}'s User id: ${user.id}`} size={150} />
-          <p>Scan this QR code to get this user's ID.</p>
+          <p>Scan this QR code to get user ID!</p>
         </div>
       </>
     );

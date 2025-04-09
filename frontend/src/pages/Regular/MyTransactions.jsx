@@ -161,13 +161,13 @@ export default function MyTransactions() {
                     <table>
                         <thead>
                             <tr>
-                                <th>Transaction ID</th>
                                 <th>Utorid</th>
                                 <th>Amount</th>
                                 <th>Spent</th>
                                 <th>Type</th>
                                 <th>CreatedBy</th>
                                 <th>Remark</th>
+                                <th>Processed By</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -177,13 +177,13 @@ export default function MyTransactions() {
                                         key={t.id}
                                         style={getTransactionTypeStyle(t.type)}
                                     >
-                                        <td>{t.id}</td>
                                         <td>{t.utorid}</td>
                                         <td>{t.amount}</td>
                                         <td>{t.spent}</td>
                                         <td>{t.type}</td>
                                         <td>{t.createdBy}</td>
                                         <td>{t.remark}</td>
+                                        <td>{t.processedBy}</td>
                                     </tr>
                                 ))
                             ) : (

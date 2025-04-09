@@ -1257,6 +1257,7 @@ app.get('/users/me/transactions', jwtAuth, async (req, res) => {
         remark: true,
         createdBy: true,
         utorid: true,
+        processedBy: true,
       },
     });
     const results = transactions.map((transaction) => {

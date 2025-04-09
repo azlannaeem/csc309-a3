@@ -32,6 +32,10 @@ function Profile() {
             <div className="row">
                 {user?.isOrganizer && <Link to="/events">My Events</Link>}
             </div>
+            <div className="row">
+                <Link to="/events">Events</Link>
+                <Link to="/event">Create Event</Link>
+            </div>
         </>
     );
 }

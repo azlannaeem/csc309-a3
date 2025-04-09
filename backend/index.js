@@ -1313,6 +1313,7 @@ app.get('/users/me/transactions', jwtAuth, async (req, res) => {
         const amount = parseInt(req.query.amount);
 
         const where = {
+            utorid: req.user.utorid,
             promotionIds: isNaN(promotionId) ? undefined : { has: promotionId },
             type: type || undefined,
             relatedId: isNaN(relatedId) ? undefined : relatedId,
@@ -1332,6 +1333,8 @@ app.get('/users/me/transactions', jwtAuth, async (req, res) => {
                 promotionIds: true,
                 remark: true,
                 createdBy: true,
+                utorid: true,
+                processedBy: true,
             },
         });
         const results = transactions.map((transaction) => {
@@ -1482,6 +1485,17 @@ app.patch(
                 return res.status(400).json({ error: 'Bad request' });
             }
             const amount = transaction.amount;
+
+            const user = await prisma.user.findUnique({
+                where: { utorid: transaction.utorid },
+                select: { points: true },
+            });
+
+            if (user.points + amount < 0) {
+                return res
+                    .status(400)
+                    .json({ error: 'Not enough points to redeem.' });
+            }
 
             const updated = await prisma.transaction.update({
                 where: { id },
@@ -1944,6 +1958,10 @@ app.patch('/events/:eventId', jwtAuth, async (req, res) => {
             }
             select.capacity = true;
         }
+        if (capacity === null) {
+            data.capacity = null;
+            select.capacity = true;
+        }
 
         if (published !== undefined && published !== null) {
             if (req.user.role !== 'manager') {
@@ -1959,7 +1977,7 @@ app.patch('/events/:eventId', jwtAuth, async (req, res) => {
         }
         const oldStart = new Date(event.startTime);
         if (
-            (name || description || location || startTime || capacity) &&
+            (name || description || location || startTime || data.capacity) &&
             now >= oldStart
         ) {
             return res
@@ -2032,9 +2050,11 @@ app.post('/events/:eventId/organizers', jwtAuth, async (req, res) => {
 
         const { utorid, ...rest } = req.body;
         if (Object.keys(rest).length > 0) {
-            return res.status(400).json({
-                error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
-            });
+            return res
+                .status(400)
+                .json({
+                    error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
+                });
         }
         if (typeof utorid !== 'string' || !utorid) {
             return res.status(400).json({ error: 'utorid must be string' });
@@ -2049,15 +2069,20 @@ app.post('/events/:eventId/organizers', jwtAuth, async (req, res) => {
         }
         const event = await prisma.event.findUnique({
             where: { id },
-            include: { guests: true },
+            include: { guests: true, organizers: true },
         });
         if (!event) {
             return res.status(404).json({ error: 'Event not found' });
         }
         if (event.guests.some((guest) => guest.id === user.id)) {
             return res.status(400).json({
-                error: 'user is registered as a guest to the event (remove user as guest first, then retry)',
+                error: 'user is registered as a guest',
             });
+        }
+        if (event.organizers.some((g) => g.id === user.id)) {
+            return res
+                .status(400)
+                .json({ error: 'user is already an organizer' });
         }
         const now = new Date();
         const end = new Date(event.endTime);
@@ -2160,7 +2185,7 @@ app.post('/events/:eventId/guests/me', jwtAuth, async (req, res) => {
                 .json({ error: 'user is registered as an organizer' });
         }
         if (event.guests.some((g) => g.id === req.user.id)) {
-            return res.status(400).json({ error: 'user is already guest' });
+            return res.status(400).json({ error: 'user is already a guest' });
         }
         const now = new Date();
         const end = new Date(event.endTime);
@@ -2252,9 +2277,11 @@ app.post('/events/:eventId/guests', jwtAuth, async (req, res) => {
 
         const { utorid, ...rest } = req.body;
         if (Object.keys(rest).length > 0) {
-            return res.status(400).json({
-                error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
-            });
+            return res
+                .status(400)
+                .json({
+                    error: `Unexpected fields: ${Object.keys(rest).join(', ')}`,
+                });
         }
         if (typeof utorid !== 'string' || !utorid) {
             return res.status(400).json({ error: 'utorid must be string' });
@@ -2285,6 +2312,9 @@ app.post('/events/:eventId/guests', jwtAuth, async (req, res) => {
             return res
                 .status(400)
                 .json({ error: 'user is registered as an organizer' });
+        }
+        if (event.guests.some((g) => g.id === user.id)) {
+            return res.status(400).json({ error: 'user is already a guest' });
         }
         if (!event.published && !clearance.includes(req.user.role)) {
             return res.status(404).json({ error: 'Event not found' });

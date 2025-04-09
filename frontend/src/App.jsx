@@ -13,12 +13,17 @@ import Users from './pages/Users';
 import { APIProvider } from './contexts/APIContext';
 import NotFound from './pages/NotFound';
 import User from './pages/User';
+import TransferPoints from './pages/Regular/TransferPoints';
+import PublishedEvents from './pages/Regular/PublishedEvents';
+import MyTransactions from './pages/Regular/MyTransactions';
 import Reset from './pages/Reset';
 import CurrentUser from './pages/CurrentUser';
 import Transactions from './pages/Transactions';
 import Transaction from './pages/Transaction';
 import CreateTransaction from './pages/Cashier/CreateTransaction';
 import ProcessRedemption from './pages/Cashier/ProcessRedemption';
+import RedemptionRequest from './pages/Regular/RedemptionRequest';
+import UnprocessedRedemptions from './pages/Regular/UnprocessedRedemptions';
 import Promotions from './pages/Promotions';
 import Promotion from './pages/Promotion';
 import CreatePromotion from './pages/CreatePromotion';
@@ -26,6 +31,9 @@ import MyEvents from './pages/EventOrganizer/MyEvents';
 import EditEvent from './pages/EventOrganizer/EditEvent';
 import AddGuests from './pages/EventOrganizer/AddGuests';
 import AwardPoints from './pages/EventOrganizer/AwardPoints';
+import Events from './pages/Events';
+import Event from './pages/Event';
+import CreateEvent from './pages/CreateEvent';
 
 const UserWrapper = () => {
     const { userId } = useParams();
@@ -42,9 +50,9 @@ const PromotionWrapper = () => {
     return <Promotion promotionId={parseInt(promotionId, 10)} />;
 };
 
-const EventWrapper = ({ Component }) => {
+const EventWrapper = () => {
     const { eventId } = useParams();
-    return <Component eventId={parseInt(eventId, 10)} />;
+    return <Event eventId={parseInt(eventId, 10)} />;
 };
 
 const MyRoutes = () => {
@@ -82,7 +90,7 @@ const MyRoutes = () => {
                     path="/process-redemption"
                     element={<ProcessRedemption />}
                 />
-                <Route path="events" element={<MyEvents />} />
+                <Route path="myevents" element={<MyEvents />} />
                 <Route path="events/:eventId/edit" element={<EditEvent />} />
                 <Route
                     path="events/:eventId/add-guests"
@@ -93,6 +101,20 @@ const MyRoutes = () => {
                     element={<AwardPoints />}
                 />
 
+                <Route path="/transfer-points" element={<TransferPoints />} />
+                <Route path="/published-events" element={<PublishedEvents />} />
+                <Route path="/my-transactions" element={<MyTransactions />} />
+                <Route
+                    path="/redemption-request"
+                    element={<RedemptionRequest />}
+                />
+                <Route
+                    path="/unprocessed-redemptions"
+                    element={<UnprocessedRedemptions />}
+                />
+                <Route path="events" element={<Events />} />
+                <Route path="events/:eventId" element={<EventWrapper />} />
+                <Route path="event" element={<CreateEvent />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
         </Routes>

@@ -20,9 +20,20 @@ function Profile() {
             <div className="row">
                 <Link to="/users/me">View Profile</Link>
                 <Link onClick={logout}>Logout</Link>
+                <Link to="/transfer-points">Transfer Points</Link>
+            </div>
+            <div className="row">
+                <Link to="/published-events">View Published Events</Link>
+                <Link to="/my-transactions">View Transactions</Link>
+                <Link to="/redemption-request">Redemption Request</Link>
             </div>
             <div className="row">
                 {user?.isOrganizer && <Link to="/events">My Events</Link>}
+            </div>
+            <div className="row">
+                <Link to="/unprocessed-redemptions">
+                    Unprocessed Redemptions
+                </Link>
             </div>
         </>
     );

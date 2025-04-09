@@ -9,6 +9,9 @@ export default function TransactionDetails ({ transaction, created }) {
       if (transaction.type === "transfer" || transaction.type === "redemption") {
         navigate(`/users/${transaction.relatedId}`);
       }
+      if (transaction.type === "event") {
+        navigate(`/events/${transaction.relatedId}`);
+      }
     }
     const remark = transaction.remark || "None";
     return (

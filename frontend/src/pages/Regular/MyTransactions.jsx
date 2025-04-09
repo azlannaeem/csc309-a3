@@ -15,7 +15,7 @@ export default function MyTransactions() {
         redemption: false,
         purchase: false,
         adjustment: false,
-        event: false, // Added the event filter
+        event: false, 
     });
 
     const { ajax } = useAPI();
@@ -161,6 +161,7 @@ export default function MyTransactions() {
                     <table>
                         <thead>
                             <tr>
+                                <th>Transaction ID</th>
                                 <th>Utorid</th>
                                 <th>Amount</th>
                                 <th>Spent</th>
@@ -176,6 +177,7 @@ export default function MyTransactions() {
                                         key={t.id}
                                         style={getTransactionTypeStyle(t.type)}
                                     >
+                                        <td>{t.id}</td>
                                         <td>{t.utorid}</td>
                                         <td>{t.amount}</td>
                                         <td>{t.spent}</td>

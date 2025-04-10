@@ -9,9 +9,4 @@ This system allows users to accumulate and redeem points, while providing robust
 - **Managers**: Oversee promotions, transactions, and user verifications.
 - **Superusers**: Full system access and administration privileges.
 
----
 
-## Deployment
-
-You can access the deployed application here:  
-**[Deployment Application Link](https://deployed-website.com)**

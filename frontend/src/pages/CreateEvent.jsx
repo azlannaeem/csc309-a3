@@ -111,7 +111,7 @@ export default function CreateEvent() {
                 onChange={(e) => handle_change(e)}
                 required
             /> 
-            <label htmlFor="capacity">Capacity (Leave empty if unlimited capacity)</label>
+            <label htmlFor="capacity">Capacity</label>
             <input 
                 type='number'
                 name="capacity"

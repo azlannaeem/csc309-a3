@@ -37,3 +37,9 @@ button:hover {
 main a:active {
     transform: translate(1px, 1px);
 }
+
+@media (max-width: 750px) {
+    main a {
+        font-size: 1rem;
+    }
+}    

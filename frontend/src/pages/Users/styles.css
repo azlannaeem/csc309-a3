@@ -12,6 +12,10 @@
     width: 15%;
 }
 
+.filters .input-container input {
+    width: 80%;
+}
+
 .filters input {
     padding: 8px;
     width: 100%;
@@ -30,6 +34,7 @@
 
 .filters .input-container {
     display: flex;
+    width: 100%;
 }
 
 .filters .checkbox-container {
@@ -88,12 +93,24 @@ p {
     display: flex;
 }
 
+.table-container {
+    overflow-x: auto;
+    width: 100%;
+}
 
-@media (max-width: 400px) {
 
-    .filters label {
-        text-align: left;
-        margin-bottom: -12px;   
+@media (max-width: 500px) {
+    
+    .filters .input-container {
+        flex-direction: column;
+        align-items: flex-start;        
+    }
+    .filters .input-container label {
+        align-self: flex-start;
+    }
+    
+    .filters .checkbox-container {
+        flex-direction: column;
     }
 
 }

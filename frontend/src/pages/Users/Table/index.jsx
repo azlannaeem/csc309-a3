@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 export default function Table({users}) {
     const navigate = useNavigate();
     return (
+        <div className="table-container">
         <table>
             <thead>
                 <tr>
@@ -25,5 +26,6 @@ export default function Table({users}) {
                 ))}
             </tbody>
         </table>
+        </div>
     );
 }

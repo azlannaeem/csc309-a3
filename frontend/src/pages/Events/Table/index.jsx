@@ -15,6 +15,7 @@ export default function Table({events}) {
     };
     const navigate = useNavigate();
     return (
+        <div className="table-container">
         <table>
             <thead>
                 <tr>
@@ -45,5 +46,6 @@ export default function Table({events}) {
                 ))}
             </tbody>
         </table>
+        </div>
     );
 }

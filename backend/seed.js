@@ -88,8 +88,8 @@ async function main() {
     console.log('Creating promotions...');
     const promoTypes = ['automatic', 'one-time'];
     const promos = [];
-    for (let i = 1; i <= 100; i++) {
-        if (i <= 50) {
+    for (let i = 1; i <= 20; i++) {
+        if (i <= 10) {
             startTime = new Date(Date.now() - 1000 * 60 * 60); // 1 hour ago
             endTime = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // in 7 days
         } else {

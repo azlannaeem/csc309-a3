@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useEffect, useState} from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAPI } from './APIContext';
 
 const AuthContext = createContext(null);
 
 /*
- * This provider should export a `user` context state that is 
+ * This provider should export a `user` context state that is
  * set (to non-null) when:
  *     1. a hard reload happens while a user is logged in.
  *     2. the user just logged in.
@@ -17,24 +17,23 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const { ajax } = useAPI();
-    const profilePath = "/users/me";
-    const loginPath = "/auth/tokens";
-    const registerPath = "/users";
+    const profilePath = '/users/me';
+    const loginPath = `${import.meta.env.VITE_BACKEND_URL}/auth/tokens`;
+    const registerPath = '/users';
 
     async function fetchUser() {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem('token');
         if (token) {
-            const expiresAt = new Date(localStorage.getItem("expiresAt"));
+            const expiresAt = new Date(localStorage.getItem('expiresAt'));
             const now = new Date();
             if (now >= expiresAt) {
-                localStorage.removeItem("token");
-                localStorage.removeItem("expiresAt");
+                localStorage.removeItem('token');
+                localStorage.removeItem('expiresAt');
                 setUser(null);
-                navigate("/login");
-            }
-            else {
-                const headers = { Authorization: `Bearer ${token}`};
-                
+                navigate('/login');
+            } else {
+                const headers = { Authorization: `Bearer ${token}` };
+
                 const res = await ajax(profilePath, { headers });
                 if (res.ok) {
                     const json = await res.json();
@@ -44,7 +43,7 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    useEffect( () => {   
+    useEffect(() => {
         fetchUser();
     }, []);
 
@@ -54,16 +53,16 @@ export const AuthProvider = ({ children }) => {
      * @remarks This function will always navigate to "/".
      */
     const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("expiresAt");
+        localStorage.removeItem('token');
+        localStorage.removeItem('expiresAt');
         setUser(null);
-        navigate("/");
+        navigate('/');
     };
 
     /**
      * Login a user with their credentials.
      *
-     * @remarks Upon success, navigates to "/profile". 
+     * @remarks Upon success, navigates to "/profile".
      * @param {string} utorid - The utorid of the user.
      * @param {string} password - The password of the user.
      * @returns {string} - Upon failure, Returns an error message.
@@ -78,8 +77,8 @@ export const AuthProvider = ({ children }) => {
         }
         const token = json.token;
         headers = { Authorization: `Bearer ${token}` };
-        localStorage.setItem("token", token);
-        localStorage.setItem("expiresAt", json.expiresAt);
+        localStorage.setItem('token', token);
+        localStorage.setItem('expiresAt', json.expiresAt);
         res = await ajax(profilePath, { headers });
         json = await res.json();
         if (!res.ok) {
@@ -90,30 +89,34 @@ export const AuthProvider = ({ children }) => {
     };
 
     /**
-     * Registers a new user. 
-     * 
+     * Registers a new user.
+     *
      * @remarks Upon success, navigates to "/".
      * @param {Object} userData - The data of the user to register.
      * @returns {string} - Upon failure, returns an error message.
      */
     const register = async (userData) => {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem('token');
         const res = await ajax(registerPath, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(userData) 
+            body: JSON.stringify(userData),
         });
         const json = await res.json();
         if (res.ok) {
-            navigate("/success", { state: { resetToken: json.resetToken, expiresAt: json.expiresAt, register: true } });
-        }
-        else {
+            navigate('/success', {
+                state: {
+                    resetToken: json.resetToken,
+                    expiresAt: json.expiresAt,
+                    register: true,
+                },
+            });
+        } else {
             return json.error;
         }
-
     };
 
     return (

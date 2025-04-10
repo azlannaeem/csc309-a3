@@ -6,9 +6,9 @@ Node.js and npm install guide: https://nodejs.org/en/download/
 Git install: https://git-scm.com/downloads
 VS Code install: https://code.visualstudio.com/
 
-------------------------------
-Installation and Setup Steps
-------------------------------
+---
+
+## Installation and Setup Steps
 
 1. Clone the repository:
    git clone https://github.com/azlannaeem/csc309-a3.git
@@ -24,7 +24,7 @@ Installation and Setup Steps
 4. Set up Prisma:
    npx prisma generate
    npx prisma db push
-   npm run seed   # (This command populates the database but you can edit the seed file if needed)
+   npm run seed # (This command populates the database but you can edit the seed file if needed)
 
 5. Start the backend server:
    node index.js 3000
@@ -35,8 +35,42 @@ Installation and Setup Steps
 
 You now have a locally running loyalty program application.
 
-------------------------------
-Additional Package Information
-------------------------------
-- Multer is used for file uploads
-- qrcode.react is used for QR code generation
+---
+
+Deployment Instructions (Using Railway)
+
+1. Create a GitHub repo and push your project there (if not already done).
+
+2. Create a Railway account and sign in with GitHub:
+   https://railway.app/
+
+3. Create a new Railway project, and link it to your GitHub repository.
+
+4. Set up the frontend service:
+   Click + New → GitHub Repo → Select your repo.
+   In the frontend service, set:
+   Root Directory: frontend
+   Build Command: npm run build
+   Start Command: npx serve -s dist
+   Deploy and generate a domain.
+
+5. Set up the backend service:
+   Add a second service in the same project.
+   Set:
+   Root Directory: backend
+   Start Command: node index.js
+   Add an environment variable:
+   FRONTEND_URL=https://<your-frontend-domain>
+   Deploy and generate a domain.
+
+6. Update frontend .env (locally or on Railway) with:
+   VITE_BACKEND_URL=https://<your-backend-domain>
+
+7. Redeploy frontend so it knows the backend URL.
+
+---
+
+## Additional Package Information
+
+-   Multer is used for file uploads
+-   qrcode.react is used for QR code generation

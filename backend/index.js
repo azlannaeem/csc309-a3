@@ -1955,8 +1955,7 @@ app.patch('/events/:eventId', jwtAuth, async (req, res) => {
             data.capacity = capacity;
             if (capacity === numGuests) {
                 data.full = true;
-            }
-            else {
+            } else {
                 data.full = false;
             }
             select.capacity = true;

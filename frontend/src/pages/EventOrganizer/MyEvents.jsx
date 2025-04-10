@@ -10,19 +10,23 @@ export default function MyEvents() {
     const navigate = useNavigate();
     const [events, setEvents] = useState([]);
     const token = localStorage.getItem('token');
+    const take = 1000;
+    const skip = 0;
 
     useEffect(() => {
         const fetchEvents = async () => {
             if (!user) return;
-            const res = await ajax('/events', {
+            const res = await ajax(`/events?page=1&limit=1000`, {
                 method: 'GET',
                 headers: {
+                    'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
             });
             if (res.ok) {
                 const data = await res.json();
                 const events = data.results || [];
+                console.log('events: ', events);
 
                 const organizedEvents = events.filter(
                     (e) =>
@@ -30,6 +34,7 @@ export default function MyEvents() {
                         e.organizers?.some((o) => o && o.utorid === user.utorid)
                 );
                 setEvents(organizedEvents);
+                console.log('my events: ', organizedEvents);
             } else {
                 const err = await res.json();
                 console.error('Error fetching events:', err.error);

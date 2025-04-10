@@ -1,8 +1,7 @@
 import { createContext, useState, useContext } from "react";
 
 export const APIContext = createContext(null);
-// export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-export const BACKEND_URL = 'https://backend-production-906e.up.railway.app:8080';
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
 
 export const useAPIContext = () => {

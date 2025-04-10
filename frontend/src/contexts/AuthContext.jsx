@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const { ajax } = useAPI();
     const profilePath = '/users/me';
-    const loginPath = `${import.meta.env.VITE_BACKEND_URL}/auth/tokens`;
+    const loginPath = '/auth/tokens';
     const registerPath = '/users';
 
     async function fetchUser() {

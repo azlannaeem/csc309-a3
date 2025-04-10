@@ -68,24 +68,21 @@ export const AuthProvider = ({ children }) => {
      * @returns {string} - Upon failure, Returns an error message.
      */
     const login = async (utorid, password) => {
-        var headers = { 'Content-Type': 'application/json' };
-        const body = JSON.stringify({ utorid, password });
-        let res = await ajax(loginPath, { method: 'POST', headers, body });
-        let json = await res.json();
-        if (!res.ok) {
-            return json.error;
+        // 🧪 Check content type and log raw response
+        const contentType = res?.headers?.get('Content-Type');
+        console.log('Content-Type:', contentType);
+
+        const rawText = await res.text(); // Read raw response
+        console.log('Raw response:', rawText);
+
+        // Try parsing if JSON
+        let json;
+        try {
+            json = JSON.parse(rawText);
+        } catch (err) {
+            console.error('❌ Failed to parse JSON:', err);
+            return 'Backend did not return valid JSON';
         }
-        const token = json.token;
-        headers = { Authorization: `Bearer ${token}` };
-        localStorage.setItem('token', token);
-        localStorage.setItem('expiresAt', json.expiresAt);
-        res = await ajax(profilePath, { headers });
-        json = await res.json();
-        if (!res.ok) {
-            return json.error;
-        }
-        setUser(json);
-        navigate(`/${json.role}`);
     };
 
     /**

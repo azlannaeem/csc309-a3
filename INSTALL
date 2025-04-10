@@ -1,6 +1,42 @@
-# This text file should explain how to deploy your website.
+How to run locally
 
-# You should write detailed description on:
+Ensure you have Node.js, npm, git, and an IDE such as VS Code installed.
 
-# 1. All the packages you need to install
-# 2. How to configure various servers (e.g., Nginx, Apache, etc)
+Node.js and npm install guide: https://nodejs.org/en/download/
+Git install: https://git-scm.com/downloads
+VS Code install: https://code.visualstudio.com/
+
+------------------------------
+Installation and Setup Steps
+------------------------------
+
+1. Clone the repository:
+   git clone https://github.com/azlannaeem/csc309-a3.git
+
+2. Install frontend dependencies:
+   cd frontend
+   npm install
+
+3. Install backend dependencies:
+   cd ../backend
+   npm install
+
+4. Set up Prisma:
+   npx prisma generate
+   npx prisma db push
+   npm run seed   # (This command populates the database but you can edit the seed file if needed)
+
+5. Start the backend server:
+   node index.js 3000
+
+6. In a new terminal, start the frontend app:
+   cd frontend
+   npm run dev
+
+You now have a locally running loyalty program application.
+
+------------------------------
+Additional Package Information
+------------------------------
+- Multer is used for file uploads
+- qrcode.react is used for QR code generation

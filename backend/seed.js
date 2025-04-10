@@ -1,196 +1,219 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const { faker } = require('@faker-js/faker');
+
+function generateSecurePassword() {
+    const fruits = [
+        'Apple',
+        'Banana',
+        'Cherry',
+        'Mango',
+        'Grape',
+        'Peach',
+        'Pear',
+        'Plum',
+        'Kiwi',
+        'Melon',
+        'Lychee',
+        'Orange',
+        'Lemon',
+        'Papaya',
+        'Coconut',
+        'Fig',
+        'Guava',
+        'Date',
+        'Berry',
+        'Apricot',
+    ];
+    const specialChars = ['!', '@', '#', '$', '%', '&'];
+
+    const fruit = faker.helpers.arrayElement(fruits);
+    const number = faker.number.int({ min: 100, max: 999 });
+    const special = faker.helpers.arrayElement(specialChars);
+
+    return `${fruit}${number}${special}`;
+}
+
+function generateEmail(firstName, lastName) {
+    return `${firstName.toLowerCase()}.${lastName.toLowerCase()}@mail.utoronto.ca`;
+}
+
 async function main() {
-    console.log('Clearing existing data...');
+    // Clear existing data
     await prisma.transaction.deleteMany();
     await prisma.event.deleteMany();
-    await prisma.promotion.deleteMany();
     await prisma.user.deleteMany();
+    await prisma.promotion.deleteMany();
 
-    console.log('Creating users...');
+    const roles = ['regular', 'cashier', 'manager', 'superuser'];
     const users = [];
     const userPasswords = [];
 
-    const roleDistribution = [
-        ...Array(2).fill('superuser'),
-        ...Array(2).fill('manager'),
-        ...Array(2).fill('cashier'),
-        ...Array(14).fill('regular'),
-    ];
+    console.log('Creating users...');
+    for (let i = 0; i < 100; i++) {
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
+        const password = generateSecurePassword();
+        const role =
+            i < 70 ? 'regular' : faker.helpers.arrayElement(roles.slice(1)); // Majority regular
 
-    const names = [
-        'Ali Ahmad',
-        'Maya Chen',
-        'Noah Khan',
-        'Leila Patel',
-        'Omar Singh',
-        'Zara Ali',
-        'Yusuf Wang',
-        'Amira Gomez',
-        'Adam Lee',
-        'Lina Costa',
-        'Karim Diaz',
-        'Sana Park',
-        'Hassan Ford',
-        'Alya Cruz',
-        'Reza Wu',
-        'Nora Kim',
-        'Tariq Rose',
-        'Ranya Noor',
-        'Sam Zhu',
-        'Hadi Tran',
-    ];
-
-    const passwords = [
-        'Apple123!',
-        'Banana456!',
-        'Grape789!',
-        'Lemon321!',
-        'Melon999!',
-    ];
-
-    for (let i = 0; i < roleDistribution.length; i++) {
-        const [first, last] = names[i].split(' ');
-        const role = roleDistribution[i];
-        const password = passwords[i % passwords.length];
+        const points = faker.number.int({ min: 0, max: 1000 });
+        const email = generateEmail(firstName, lastName);
         const utorid = `${role.slice(0, 4)}${(i + 1)
             .toString()
             .padStart(4, '0')}`;
-        const email = `${first.toLowerCase()}.${last.toLowerCase()}@mail.utoronto.ca`;
 
-        const user = await prisma.user.create({
-            data: {
-                utorid,
-                name: names[i],
-                email,
-                password,
-                role,
-                verified: i % 3 !== 0, // make some unverified
-            },
+        users.push(
+            prisma.user.create({
+                data: {
+                    utorid: utorid,
+                    name: `${firstName} ${lastName}`,
+                    email,
+                    password: password,
+                    role,
+                    points,
+                },
+            })
+        );
+        userPasswords.push({
+            utorid,
+            role,
+            password,
         });
-
-        users.push(user);
-        userPasswords.push({ utorid, role, password });
     }
+
+    const createdUsers = await Promise.all(users);
 
     console.log('Creating promotions...');
     const promoTypes = ['automatic', 'one-time'];
-    for (let i = 1; i <= 12; i++) {
-        if (i <= 6) {
+    const promos = [];
+    for (let i = 1; i <= 100; i++) {
+        if (i <= 50) {
             startTime = new Date(Date.now() - 1000 * 60 * 60); // 1 hour ago
             endTime = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // in 7 days
         } else {
             startTime = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // in 7 days
             endTime = new Date(Date.now() + 1000 * 60 * 60 * 24 * 14); // in 14 days
         }
-        await prisma.promotion.create({
-            data: {
-                name: `Promo ${i}`,
-                description: `Earn or save with Promo ${i}`,
-                type: promoTypes[i % 2],
-                startTime,
-                endTime,
-                rate: 0.05 * i,
-                points: i * 20,
-                minSpending: 10 * i,
-            },
-        });
+        promos.push(
+            prisma.promotion.create({
+                data: {
+                    name: `Promo ${i}`,
+                    description: `Earn or save with Promo ${i}`,
+                    type: promoTypes[i % 2],
+                    startTime,
+                    endTime,
+                    rate: 0.05 * i,
+                    points: i * 20,
+                    minSpending: 10 * i,
+                },
+            })
+        );
     }
+
+    await Promise.all(promos);
 
     console.log('Creating events...');
     const events = [];
-    const locations = ['BA 1230', 'SS 2108', 'MP 202', 'MY 280', 'MC 105'];
-    const organizers = users.filter(
+    const locations = [
+        'BA 1230',
+        'SS 2108',
+        'MP 202',
+        'MY 280',
+        'MC 105',
+        'BA 1240',
+        'SS 2110',
+        'MP 204',
+        'MY 285',
+        'MC 110',
+    ];
+    const organizers = createdUsers.filter(
         (u) => u.role === 'manager' || u.role === 'superuser'
     );
+    for (let i = 0; i < 50; i++) {
+        const start = new Date(
+            Date.now() + faker.number.int({ min: 1, max: 5 }) * 86400000
+        );
+        const end = new Date(
+            start.getTime() + faker.number.int({ min: 1, max: 3 }) * 86400000
+        );
 
-    for (let i = 0; i < 12; i++) {
-        const start = new Date(Date.now() + (i + 1) * 86400000);
-        const end = new Date(start.getTime() + 2 * 3600000);
-        const event = await prisma.event.create({
-            data: {
-                name: `Event ${i + 1}`,
-                location: locations[i % locations.length],
-                startTime: start,
-                endTime: end,
-                pointsRemain: (i + 1) * 50,
-                pointsAwarded: 0,
-                organizers: {
-                    connect: [{ id: organizers[i % organizers.length].id }],
-                },
-                description: `This is the description for Event ${i + 1}`,
-            },
-        });
-        events.push(event);
-    }
-
-    console.log('RSVPing regular users to 3 events...');
-    const regulars = users.filter((u) => u.role === 'regular');
-    const rsvpedEvents = events.slice(0, 3);
-
-    for (const event of rsvpedEvents) {
-        const attendees = regulars.sort(() => 0.5 - Math.random()).slice(0, 5);
-        for (const user of attendees) {
-            await prisma.event.update({
-                where: { id: event.id },
+        events.push(
+            prisma.event.create({
                 data: {
-                    guests: { connect: { id: user.id } },
+                    name: `Event ${i + 1}`,
+                    location: faker.helpers.arrayElement(locations),
+                    description: `This is the description for Event ${i + 1}`,
+                    startTime: start,
+                    endTime: end,
+                    pointsRemain: (i + 1) * 50,
+                    pointsAwarded: 0,
+                    organizers: {
+                        connect: [{ id: organizers[i % organizers.length].id }],
+                    },
+                    guests: {
+                        connect: createdUsers
+                            .filter((u) => u.role === 'regular')
+                            .sort(() => 0.5 - Math.random())
+                            .slice(0, 10)
+                            .map((u) => ({ id: u.id })),
+                    },
                 },
-            });
-        }
+            })
+        );
     }
 
-    console.log('Creating 10 redemption requests...');
-    for (let i = 0; i < 10; i++) {
-        const user = regulars[i];
-        await prisma.transaction.create({
-            data: {
-                type: 'redemption',
-                amount: 100 + i * 10,
-                redeemed: 100 + i * 10,
-                remark: `Reward ${i + 1}`,
-                createdBy: user.utorid,
-                processedBy: null,
-                utorid: user.utorid,
-            },
-        });
-    }
+    await Promise.all(events);
 
-    console.log('Creating 40 varied transactions...');
-    const txTypes = ['purchase', 'transfer', 'adjustment'];
+    console.log('Creating 100 varied transactions...');
 
-    for (let i = 0; i < 40; i++) {
-        const sender = users[(i + 1) % users.length];
-        const receiver = users[(i + 2) % users.length];
+    const transactionTypes = [
+        'purchase',
+        'transfer',
+        'adjustment',
+        'redemption',
+    ];
 
-        let type = txTypes[i % txTypes.length];
-        if (sender.role === 'regular') {
-            // restrict to valid types
-            type = i % 2 === 0 ? 'transfer' : 'redemption';
-        }
+    const transactions = [];
 
-        if (
-            (type === 'adjustment' || type === 'purchase') &&
-            sender.role === 'regular'
-        ) {
-            continue;
-        }
+    for (let i = 0; i < 100; i++) {
+        const user = faker.helpers.arrayElement(createdUsers);
+        const type = faker.helpers.arrayElement(transactionTypes);
 
-        const tx = {
+        let transactionData = {
             type,
-            amount: 50 + i,
-            createdBy: sender.utorid,
-            utorid: sender.utorid,
-            remark: `Transaction #${i + 1}`,
+            amount: faker.number.int({ min: 10, max: 100 }),
+            createdBy: user.utorid,
+            utorid: user.utorid,
+            remark: `Transaction ${i + 1}`,
         };
 
-        if (type === 'purchase') tx.spent = tx.amount;
-        if (type === 'transfer' || type === 'adjustment')
-            tx.relatedId = receiver.id;
+        // Customize per type
+        if (type === 'redemption') {
+            transactionData.type = 'redemption';
+            transactionData.amount *= -1; // Make it negative
+            transactionData.redeemed = 100 + i * 10;
+            transactionData.processedBy = null;
+            transactionData.remark = `Reward ${i + 1}`;
+        } else if (type === 'transfer') {
+            const receiver = faker.helpers.arrayElement(
+                users.filter((u) => u.id !== user.id)
+            );
+            transactionData.relatedId = receiver.id;
+        } else if (type === 'adjustment') {
+            const related = faker.helpers.arrayElement(
+                users.filter((u) => u.id !== user.id)
+            );
+            transactionData.relatedId = related.id;
+        } else if (type === 'purchase') {
+            transactionData.spent = transactionData.amount;
+        }
 
-        await prisma.transaction.create({ data: tx });
+        transactions.push(prisma.transaction.create({ data: transactionData }));
     }
+
+    await Promise.all(transactions);
 
     console.log('\nSEED COMPLETE. Login credentials:');
     userPasswords.forEach(({ utorid, role, password }) => {
